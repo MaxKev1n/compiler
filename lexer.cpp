@@ -1,12 +1,12 @@
-#include <iostream>
 #include "header.h"
+
 using namespace std;
 
 chType lexer::chtypeDetect(char ch){
     if(let.find(ch) != let.end()){
         return letter;
     }
-    else if(num.find(ch) != let.end()){
+    else if(num.find(ch) != num.end()){
         return number;
     }
     else{
@@ -94,13 +94,17 @@ void lexer::run(string address_grammar, string address_txt){
     while(getline(inf, text)){
         string t = "";
         int curIndex = 0;
-        for(int i = 0;i < text.length();i++){
+        for(int i = 0;i <= text.length();i++){
+            curIndex = nfa.transformState(curIndex, text[i]);
             if(curIndex == 1){
                 curIndex = 0;
                 res.push_back(t);
+                t = "";
+            }else if((curIndex == -1) && (lexer::chtypeDetect(text[i]) == epsilon)){
+                curIndex = 0;
+                t = "";
             }
             else{
-                curIndex = nfa.transformState(curIndex, text[i]);
                 t += text[i];
             }
         }

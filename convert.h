@@ -1,8 +1,10 @@
-#ifndef CONVERT_H
-#define CONVERT_H
+#pragma once
+#include "header.h"
 
 using namespace std;
-#include "header.h"
+
+struct chType;
+struct lexer;
 
 struct NFA_Node
 {
@@ -13,10 +15,10 @@ struct NFA_Node
         bool isVisit = false;
 };
 
-
 struct NFA{
     public:
         vector<NFA_Node> vec;
+        set<int> NFA_set;
 
         NFA(){
             this->initialize();
@@ -31,5 +33,3 @@ struct NFA{
         void initialize();
         
 };
-
-#endif

@@ -1,5 +1,5 @@
-#include <iostream>
 #include "header.h"
+
 using namespace std;
 
 void NFA::initialize(){
@@ -11,19 +11,43 @@ void NFA::initialize(){
 
     this->vec.push_back(head);
     this->vec.push_back(tail);
+    this->NFA_set.insert(0);
+    this->NFA_set.insert(1);
 }
 
 void NFA::addNode(int curIndex, int nextIndex, chType action){
     NFA_Node newNode;
     newNode.index = nextIndex;
-    this->vec[curIndex].nextNode.push_back(nextIndex);
-    this->vec[curIndex].action.push_back(action);
-    this->vec.insert(this->vec.begin(), newNode);
+
+    bool nodeIsNew = true;
+    for(int i = 0;i < this->vec[curIndex].nextNode.size();i++){
+        if((this->vec[curIndex].nextNode[i] == newNode.index) && (this->vec[curIndex].action[i] == action)){
+            nodeIsNew = false;
+        }
+    }
+    if(nodeIsNew){
+        this->vec[curIndex].nextNode.push_back(nextIndex);
+        this->vec[curIndex].action.push_back(action);
+    }
+
+    if(this->NFA_set.find(nextIndex) == this->NFA_set.end()){
+        this->NFA_set.insert(nextIndex);
+        this->vec.insert(this->vec.begin() + nextIndex, newNode);
+    }
 }
 
 void NFA::addNode(int curIndex, chType action){
-    this->vec[curIndex].nextNode.push_back(1);
-    this->vec[curIndex].action.push_back(action);
+    bool nodeIsNew = true;
+    for(int i = 0;i < this->vec[curIndex].nextNode.size();i++){
+        if((this->vec[curIndex].nextNode[i] == 1) && (this->vec[curIndex].action[i] == action)){
+            nodeIsNew = false;
+        }
+    }
+    if(nodeIsNew){
+        this->vec[curIndex].nextNode.push_back(1);
+        this->vec[curIndex].action.push_back(action);
+    }
+
 }
 
 void NFA::readGrammar(string address){
@@ -66,6 +90,9 @@ void NFA::readGrammar(string address){
 }
 
 int NFA::transformState(int curIndex, char ch){
+    if(curIndex == -1){
+        return -1;
+    }
     NFA_Node curNode = this->vec[curIndex];
     int index = 0;
     for(vector<chType>::iterator iter = curNode.action.begin(); iter != curNode.action.end();++iter, ++index){

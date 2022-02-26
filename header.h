@@ -1,8 +1,9 @@
-#include "convert.h"
-#include "lexer.h"
+#pragma once
 #include <set>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <regex>
+#include "lexer.h"
+#include "convert.h"
