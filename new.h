@@ -1,6 +1,10 @@
-#ifndef LEXER_H
-#define LEXER_H
-#include "header.h"
+#include <set>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <regex>
+using namespace std;
 
 struct chType{
     public:
@@ -14,6 +18,46 @@ struct chType{
             return this->id == right.id;
         }
 };
+
+struct NFA_Node
+{
+    public:
+        int index;
+        vector<int> nextNode;
+        vector<chType> action;
+        bool isVisit = false;
+};
+
+
+struct lexer
+{
+    public:
+        static chType chtypeDetect(char ch);
+        void run(string address_grammar, string address_txt);
+    private:
+        
+};
+
+
+struct NFA{
+    public:
+        vector<NFA_Node> vec;
+        set<int> NFA_set;
+
+        NFA(){
+            this->initialize();
+        };
+
+        void addNode(int curIndex, int nextIndex, chType action);
+        void addNode(int curIndex, chType action); //go to final state
+        void readGrammar(string address);
+        int transformState(int curIndex, char ch);
+
+    private:
+        void initialize();
+        
+};
+
 
 chType letter(0, "letter");
 chType number(1, "number");
@@ -41,15 +85,3 @@ set<char> num {'0','1','2','3','4','5','6','7','8','9'};
 vector<chType> chTypeList {letter, number, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
                            dollar, epsilon};
-
-struct lexer
-{
-    public:
-        static chType chtypeDetect(char ch);
-        void run(string address_grammar, string address_txt);
-    private:
-        
-};
-
-
-#endif

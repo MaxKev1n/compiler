@@ -82,3 +82,31 @@ chType lexer::chtypeDetect(char ch){
         }
     }
 }
+
+void lexer::run(string address_grammar, string address_txt){
+    NFA nfa;
+    nfa.readGrammar(address_grammar);
+
+    vector<string> res;
+    string text;
+    ifstream inf;
+    inf.open(address_txt);
+    while(getline(inf, text)){
+        string t = "";
+        int curIndex = 0;
+        for(int i = 0;i < text.length();i++){
+            if(curIndex == 1){
+                curIndex = 0;
+                res.push_back(t);
+            }
+            else{
+                curIndex = nfa.transformState(curIndex, text[i]);
+                t += text[i];
+            }
+        }
+    }
+    inf.close();
+    for(int i = 0;i < res.size();i++){
+        cout<<res[i]<<endl;
+    }
+}

@@ -22,11 +22,14 @@ struct NFA{
             this->initialize();
         };
 
-    private:
-        void initialize();
         void addNode(int curIndex, int nextIndex, chType action);
         void addNode(int curIndex, chType action); //go to final state
+        void readGrammar(string address);
         int transformState(int curIndex, char ch);
+
+    private:
+        void initialize();
+        
 };
 
 #endif
