@@ -39,3 +39,13 @@
 └── test.cpp
 
 1 directory, 10 files
+
+
+
+### 2022.2.17 13:53
+
+---
+
+完成DFA最小化，并且可以输出具体的DFA列表，输出结果如图
+
+<img src="image/2022.2.27.png" style="zoom: 67%;float: left" />

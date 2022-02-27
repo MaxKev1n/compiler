@@ -12,7 +12,6 @@ struct NFA_Node
         int index;
         vector<int> nextNode;
         vector<chType> action;
-        bool isVisit = false;
 };
 
 struct NFA{
@@ -32,4 +31,29 @@ struct NFA{
     private:
         void initialize();
         
+};
+
+struct DFA_state{
+    public:
+        int index;
+        set<int> NFA_state_set;
+        vector<int> nextState;
+        vector<chType> action;
+        bool isVisit = false;
+};
+
+struct DFA{
+    public:
+        vector<DFA_state> vec;
+
+        DFA(NFA nfa){
+            this->initialize(nfa);
+        }
+
+        void printDFA();
+    
+    private:
+        void initialize(NFA nfa);
+        bool allVisited();
+        bool notNew(set<int>  newSet);
 };

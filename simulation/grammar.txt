@@ -1,8 +1,26 @@
 0 underline 2
 0 letter 2
+0 letter_E 2
+0 letter_i 2
 0 letter
+0 letter_E
+0 letter_i
 2 epsilon
 2 underline 2
 2 letter 2
 2 dollar 2
 2 number 2
+0 natNumber 3
+0 number 4
+4 dot 3
+3 number 3
+3 number 5
+5 letter_E 6
+6 Plus 7
+7 number
+0 natNumber 8
+8 number 8
+8 Plus 9
+9 natNumber 10
+10 number 10
+10 letter_i

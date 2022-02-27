@@ -9,9 +9,20 @@ chType lexer::chtypeDetect(char ch){
     else if(num.find(ch) != num.end()){
         return number;
     }
+    else if(natNum.find(ch) != natNum.end()){
+        return natNumber;
+    }
     else{
         switch (ch)
         {
+        case 'E':{
+            return letter_E;
+            break;
+        }
+        case 'i':{
+            return letter_i;
+            break;
+        }
         case '_':{
             return underline;
             break;
@@ -76,6 +87,10 @@ chType lexer::chtypeDetect(char ch){
             return dollar;
             break;
         }
+        case '.':{
+            return dot;
+            break;
+        }
         default:
             return epsilon;
             break;
@@ -86,6 +101,9 @@ chType lexer::chtypeDetect(char ch){
 void lexer::run(string address_grammar, string address_txt){
     NFA nfa;
     nfa.readGrammar(address_grammar);
+
+    DFA dfa(nfa);
+    dfa.printDFA();
 
     vector<string> res;
     string text;
