@@ -17,7 +17,7 @@ struct chType{
 };
 
 const chType letter(0, "letter");
-const chType number(1, "number");
+const chType natNumber(1, "natNumber");
 const chType underline(2, "underline");
 const chType midLeftPar(3, "midLeftPar");
 const chType midRightPar(4, "midRightPar");
@@ -36,9 +36,10 @@ const chType smallRightPar(16, "smallRightPar");
 const chType dollar(17, "dollar");
 const chType epsilon(18, "epsilon");
 const chType dot(19, "dot");
-const chType natNumber(20, "natNumber");
-const chType letter_E(21, "letter_E");
-const chType letter_i(22, "letter_i");
+const chType letter_E(20, "letter_E");
+const chType letter_i(21, "letter_i");
+const chType space(22, "space");
+const chType zero(23, "zero");
 
 struct lexer
 {
@@ -51,9 +52,8 @@ struct lexer
 
 const set<char> let {'a','b','c','d','e','f','g','h','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                          'A','B','C','D', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-const set<char> num {'0','1','2','3','4','5','6','7','8','9'};
 const set<char> natNum {'1','2','3','4','5','6','7','8','9'};
 
-static vector<chType> chTypeList {letter, number, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
+static vector<chType> chTypeList {letter, natNumber, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
-                           dollar, epsilon, dot, natNumber, letter_E, letter_i};
+                           dollar, epsilon, dot, letter_E, letter_i, space, zero};

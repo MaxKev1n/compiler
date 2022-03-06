@@ -6,9 +6,6 @@ chType lexer::chtypeDetect(char ch){
     if(let.find(ch) != let.end()){
         return letter;
     }
-    else if(num.find(ch) != num.end()){
-        return number;
-    }
     else if(natNum.find(ch) != natNum.end()){
         return natNumber;
     }
@@ -91,6 +88,18 @@ chType lexer::chtypeDetect(char ch){
             return dot;
             break;
         }
+        case ' ':{
+            return space;
+            break;
+        }
+        case '\n':{
+            return space;
+            break;
+        }
+        case '0':{
+            return zero;
+            break;
+        }
         default:
             return epsilon;
             break;
@@ -110,22 +119,27 @@ void lexer::run(string address_grammar, string address_txt){
     ifstream inf;
     inf.open(address_txt);
     while(getline(inf, text)){
+        text += '\n';
         string t = "";
         int curIndex = 0;
         for(int i = 0;i <= text.length();i++){
-            curIndex = nfa.transformState(curIndex, text[i]);
-            if(curIndex == 1){
+            curIndex = dfa.transformState(curIndex, text[i]);
+            cout<<curIndex;
+            if(curIndex == 3){
                 curIndex = 0;
                 res.push_back(t);
                 t = "";
-            }else if((curIndex == -1) && (lexer::chtypeDetect(text[i]) == epsilon)){
+            }else if(curIndex == -1 && text[i] == ' '){
                 curIndex = 0;
                 t = "";
-            }
-            else{
+            }else if(curIndex == -1){
+                curIndex = -1;
+            }else{
                 t += text[i];
             }
+            cout<<" "<<t<<endl;
         }
+        cout<<endl;
     }
     inf.close();
     for(int i = 0;i < res.size();i++){

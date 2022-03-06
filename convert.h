@@ -12,6 +12,7 @@ struct NFA_Node
         int index;
         vector<int> nextNode;
         vector<chType> action;
+        set<int> epSet;
 };
 
 struct NFA{
@@ -51,9 +52,10 @@ struct DFA{
         }
 
         void printDFA();
+        int transformState(int curIndex, char ch);
     
     private:
         void initialize(NFA nfa);
         bool allVisited();
-        bool notNew(set<int>  newSet);
+        bool isNew(set<int>  newSet);
 };

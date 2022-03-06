@@ -104,6 +104,21 @@ int NFA::transformState(int curIndex, char ch){
     return -1;
 }
 
+int DFA::transformState(int curIndex, char ch){
+    if(curIndex == -1){
+        return -1;
+    }
+    DFA_state curState = this->vec[curIndex];
+    int index = 0;
+    for(vector<chType>::iterator iter = curState.action.begin(); iter != curState.action.end();++iter, ++index){
+        chType curType = lexer::chtypeDetect(ch);
+        if(curType == (*iter)){
+            return curState.nextState[index];
+        }
+    }
+    return -1;
+}
+
 bool DFA::allVisited(){
     for(vector<DFA_state>::iterator iter = this->vec.begin(); iter != this->vec.end();++iter){
         if(iter->isVisit == false){
@@ -113,19 +128,16 @@ bool DFA::allVisited(){
     return true;
 }
 
-bool DFA::notNew(set<int> newSet){
+bool DFA::isNew(set<int> newSet){
+    if(newSet.size() == 0){
+        return false;
+    }
     for(vector<DFA_state>::iterator iter = this->vec.begin(); iter != this->vec.end();++iter){
-        bool notNew = true;
-        for(set<int>::iterator iter2 = newSet.begin(); iter2!= newSet.end();++iter2){
-            if(iter->NFA_state_set.find(*iter2) == iter->NFA_state_set.end()){
-                notNew = false;
-            }
-        }
-        if(notNew){
-            return true;
+        if(iter->NFA_state_set == newSet){
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
 void DFA::initialize(NFA nfa){
@@ -146,7 +158,7 @@ void DFA::initialize(NFA nfa){
                 }
             }
 
-            if(tempSet.size() > 0 && !(this->notNew(tempSet))){
+            if(tempSet.size() > 0 && (this->isNew(tempSet))){
                 DFA_state newState;
                 newState.index = this->vec.size();
                 newState.NFA_state_set = tempSet;
@@ -156,13 +168,7 @@ void DFA::initialize(NFA nfa){
                 this->vec[index].action.push_back(*iter);
             }else if(tempSet.size() > 0){
                 for(vector<DFA_state>::iterator iter2 = this->vec.begin(); iter2 != this->vec.end();++iter2){
-                    bool notEqual = false;
-                    for(set<int>::iterator iter3 = tempSet.begin(); iter3!= tempSet.end();++iter3){
-                        if(iter2->NFA_state_set.find(*iter3) == iter2->NFA_state_set.end()){
-                            notEqual = true;
-                        }
-                    }
-                    if(!notEqual){
+                    if(iter2->NFA_state_set == tempSet){
                         this->vec[index].nextState.push_back(iter2->index);
                         this->vec[index].action.push_back(*iter);
                     }
@@ -179,6 +185,10 @@ void DFA::printDFA(){
 
     for(vector<DFA_state>::iterator iter = this->vec.begin(); iter != this->vec.end();++iter){
         cout<<"index: "<<iter->index<<endl;
+        for(set<int>::iterator iter2 = iter->NFA_state_set.begin(); iter2!= iter->NFA_state_set.end();++iter2){
+            cout<<*iter2<<" ";
+        }
+        cout<<endl;
         for(int i = 0;i < iter->nextState.size();i++){
             cout<<"action: "<<iter->action[i].name<<" "<<"nextState: "<<iter->nextState[i]<<endl;
         }
