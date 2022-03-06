@@ -26,8 +26,20 @@ void NFA::addNode(int curIndex, int nextIndex, chType action){
         }
     }
     if(nodeIsNew){
-        this->vec[curIndex].nextNode.push_back(nextIndex);
-        this->vec[curIndex].action.push_back(action);
+        if(action == epsilon){
+            bool newNode =true;
+            for(int i = 0;i < this->vec[curIndex].epSet.size();i++){
+                if(nextIndex == this->vec[curIndex].epSet[i])
+                    newNode = false;
+            }
+            if(newNode){
+                this->vec[curIndex].nextNode.push_back(nextIndex);
+                this->vec[curIndex].epSet.push_back(nextIndex);
+            }
+        }else{
+            this->vec[curIndex].nextNode.push_back(nextIndex);
+            this->vec[curIndex].action.push_back(action);
+        }
     }
 
     if(this->NFA_set.find(nextIndex) == this->NFA_set.end()){
@@ -102,6 +114,11 @@ int NFA::transformState(int curIndex, char ch){
         }
     }
     return -1;
+}
+
+vector<int> NFA::epClosure(int curIndex){
+    NFA tempNFA = *this;
+
 }
 
 int DFA::transformState(int curIndex, char ch){
