@@ -96,6 +96,10 @@ chType lexer::chtypeDetect(char ch){
             return space;
             break;
         }
+        case ',':{
+            return semicolon;
+            break;
+        }
         case '0':{
             return zero;
             break;
@@ -110,6 +114,8 @@ chType lexer::chtypeDetect(char ch){
 void lexer::run(string address_grammar, string address_txt){
     NFA nfa;
     nfa.readGrammar(address_grammar);
+    nfa.epClosure();
+    nfa.printEpClosure();
 
     DFA dfa(nfa);
     dfa.printDFA();
@@ -125,7 +131,7 @@ void lexer::run(string address_grammar, string address_txt){
         for(int i = 0;i <= text.length();i++){
             curIndex = dfa.transformState(curIndex, text[i]);
             cout<<curIndex;
-            if(curIndex == 3){
+            if(curIndex == 4){
                 curIndex = 0;
                 res.push_back(t);
                 t = "";

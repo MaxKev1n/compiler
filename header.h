@@ -5,5 +5,6 @@
 #include <vector>
 #include <fstream>
 #include <regex>
+#include <stack>
 #include "lexer.h"
 #include "convert.h"

@@ -10,20 +10,55 @@
 2 letter_E 2
 2 letter_i 2
 2 space
-0 natNumber 3
-3 natNumber 4
-3 zero 4
-3 natNumber 3
-3 zero 3
-4 dot 5
-5 natNumber 6
+2 semicolon
+0 zero 3
+0 natNumber 4
+0 zero 6
+0 natNumber 6
+4 natNumber 4
+4 zero 4
+4 epsilon 3
+3 dot 5
 5 zero 6
-6 natNumber 7
-6 zero 7
-6 natNumber 6
+5 natNumber 6
 6 zero 6
+6 natNumber 6
+6 epsilon 7
 7 space
-3 natNumber 7
-3 zero 7
-3 natNumber 3
-3 zero 3
+7 semicolon
+7 letter_E 8
+8 Plus 9
+9 natNumber 10
+10 zero 10
+10 natNumber 10
+10 epsilon 11
+11 space
+11 semicolon
+0 zero 3
+0 natNumber 4
+0 zero 6
+0 natNumber 6
+4 natNumber 4
+4 zero 4
+4 epsilon 3
+3 dot 5
+5 zero 6
+5 natNumber 6
+6 zero 6
+6 natNumber 6
+6 epsilon 7
+7 Plus 12
+12 zero 13
+12 natNumber 14
+14 natNumber 14
+14 zero 14
+14 epsilon 13
+13 dot 15
+15 zero 16
+15 natNumber 16
+16 zero 16
+16 natNumber 16
+16 epsilon 17
+17 letter_i 18
+18 space
+18 semicolon

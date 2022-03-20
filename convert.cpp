@@ -34,6 +34,7 @@ void NFA::addNode(int curIndex, int nextIndex, chType action){
             }
             if(newNode){
                 this->vec[curIndex].nextNode.push_back(nextIndex);
+                this->vec[curIndex].action.push_back(action);
                 this->vec[curIndex].epSet.push_back(nextIndex);
             }
         }else{
@@ -116,9 +117,35 @@ int NFA::transformState(int curIndex, char ch){
     return -1;
 }
 
-vector<int> NFA::epClosure(int curIndex){
-    NFA tempNFA = *this;
+void NFA::epClosure(){
+    int numNode = this->vec.size();
+    for(int i = 0;i < numNode;i++){
+        int visited[numNode] = {0};
+        NFA_Node node = this->vec[i];
+        stack<int> s;
+        s.push(i);
+        while(!s.empty()){
+            int currentNum = s.top();
+            NFA_Node currentNode = this->vec[currentNum];
+            for(int index = 0;index < currentNode.epSet.size();index++){
+                int epSetIndex = currentNode.epSet[index];
+                if(visited[epSetIndex] == 0){
+                    s.push(epSetIndex);
+                    visited[epSetIndex] = 1;
+                    node.epClosure.push_back(epSetIndex);
+                }
+            }
+            s.pop();
+        }
+        this->vec[i] = node;
+    }
+}
 
+void NFA::printEpClosure(){
+    for(vector<NFA_Node>::iterator iter = this->vec.begin();iter != this->vec.end();++iter){
+        cout<<iter->index<<": ";
+        iter->printEpClosure();
+    }
 }
 
 int DFA::transformState(int curIndex, char ch){
@@ -166,12 +193,22 @@ void DFA::initialize(NFA nfa){
     while(!allVisited()){
         DFA_state state = this->vec[index];
         for(vector<chType>::iterator iter = chTypeList.begin(); iter != chTypeList.end();++iter){
-            set<int> tempSet;
+            if(*iter == epsilon)
+                continue;
+            set<int> tempMoveSet;
             for(set<int>::iterator iter2 = state.NFA_state_set.begin(); iter2!= state.NFA_state_set.end();++iter2){
                 NFA_Node tempNode = nfa.vec[*iter2];
                 for(int i = 0;i < tempNode.action.size();i++){
                     if((*iter) == tempNode.action[i])
-                        tempSet.insert(tempNode.nextNode[i]);
+                        tempMoveSet.insert(tempNode.nextNode[i]);
+                }
+            }
+
+            set<int> tempSet = tempMoveSet;
+            for(set<int>::iterator iter2 = tempSet.begin(); iter2!= tempSet.end();++iter2){
+                NFA_Node node = nfa.vec[*iter2];
+                for(int i = 0;i < node.epClosure.size();i++){
+                    tempSet.insert(node.epClosure[i]);
                 }
             }
 
@@ -195,6 +232,12 @@ void DFA::initialize(NFA nfa){
         this->vec[index].isVisit = true;
         index++;
     }
+}
+
+void NFA_Node::printEpClosure(){
+    for(vector<int>::iterator iter = this->epClosure.begin();iter != this->epClosure.end();++iter)
+        cout<<*iter<<" ";
+    cout<<endl;
 }
 
 void DFA::printDFA(){

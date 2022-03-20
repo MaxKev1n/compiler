@@ -13,7 +13,8 @@ struct NFA_Node
         vector<int> nextNode;
         vector<chType> action;
         vector<int> epSet;
-        bool isVisit = false;
+        vector<int> epClosure;
+        void printEpClosure();
 };
 
 struct NFA{
@@ -29,7 +30,8 @@ struct NFA{
         void addNode(int curIndex, chType action); //go to final state
         void readGrammar(string address);
         int transformState(int curIndex, char ch);
-        vector<int> epClosure(int curIndex);
+        void epClosure();
+        void printEpClosure();
 
     private:
         void initialize();
