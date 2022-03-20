@@ -62,3 +62,29 @@
 17 letter_i 18
 18 space
 18 semicolon
+0 midLeftPar 19
+0 midRightPar 19
+0 Plus 19
+0 Minus 19
+0 logAnd 19
+0 logOr 19
+0 logNot 19
+0 logXor 19
+0 rightArrow 19
+0 leftArrow 19
+0 multi 19
+0 smallLeftPar 19
+0 smallRightPar 19
+19 space
+19 semicolon
+0 rightArrow 20
+20 rightArrow 21
+21 space
+21 semicolon
+21 rightArrow 22
+22 space
+22 semicolon
+0 leftArrow 23
+23 leftArrow 24
+24 space
+24 semicolon

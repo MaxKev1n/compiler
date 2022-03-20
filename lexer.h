@@ -47,7 +47,17 @@ struct lexer
         static chType chtypeDetect(char ch);
         void run(string address_grammar, string address_txt);
     private:
+        string typeRecognition(string str);
         
+};
+
+struct Tuple{
+    public:
+        int line;
+        string str;
+        string type;
+        Tuple();
+        Tuple(int line, string str, string type) : line(line), str(str), type(type){};
 };
 
 const set<char> let {'a','b','c','d','e','f','g','h','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
@@ -57,3 +67,10 @@ const set<char> natNum {'1','2','3','4','5','6','7','8','9'};
 static vector<chType> chTypeList {letter, natNumber, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
                            dollar, epsilon, dot, letter_E, letter_i, space, zero};
+
+const set<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "default",
+                            "case", "if", "else", "elseif"};
+
+const set<string> qualifier {"abstract", "public", "private", "override", "const"};
+
+const set<string> operators {"[", "]", "+", "-", "&", "|", "~", "^", ">>", "<<", ">>>", "(", ")", "*", "<", ">"};
