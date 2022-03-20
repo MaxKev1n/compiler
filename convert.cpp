@@ -44,7 +44,7 @@ void NFA::addNode(int curIndex, int nextIndex, chType action){
 
     if(this->NFA_set.find(nextIndex) == this->NFA_set.end()){
         this->NFA_set.insert(nextIndex);
-        this->vec.insert(this->vec.begin() + nextIndex, newNode);
+        this->vec.push_back(newNode);
     }
 }
 

@@ -133,7 +133,7 @@ void lexer::run(string address_grammar, string address_txt){
     NFA nfa;
     nfa.readGrammar(address_grammar);
     nfa.epClosure();
-    nfa.printEpClosure();
+    //nfa.printEpClosure();
 
     DFA dfa(nfa);
     dfa.printDFA();

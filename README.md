@@ -88,3 +88,18 @@
 
 <img src="image/task one.png" style="zoom: 100%;float: left" />
 
+
+
+### 2022.3.20 19:37
+
+---
+
+1. 上个版本存在无法识别如*1+3.4i*一类的数字，已修复
+2. 修复第一个问题时出现段错误，经过gdb debug后发现，`addNode()`函数中使用了`vector::insert()`方法，容易造成越界导致段错误，已更改为`vector::push_back()`
+3. 修改测试数据
+
+
+
+**运行结果：**
+
+<img src="image/task one2.png" style="zoom: 100%;float: left" />
