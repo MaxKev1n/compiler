@@ -148,6 +148,7 @@ void lexer::run(string address_grammar, string address_txt){
         string t = "";
         int curIndex = 0;
         for(int i = 0;i <= text.length();i++){
+            cout<<t<<" "<<curIndex<<endl;
             curIndex = dfa.transformState(curIndex, text[i]);
             if(curIndex == 7){
                 string type = typeRecognition(t);

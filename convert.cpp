@@ -18,7 +18,6 @@ void NFA::initialize(){
 void NFA::addNode(int curIndex, int nextIndex, chType action){
     NFA_Node newNode;
     newNode.index = nextIndex;
-
     bool nodeIsNew = true;
     for(int i = 0;i < this->vec[curIndex].nextNode.size();i++){
         if((this->vec[curIndex].nextNode[i] == newNode.index) && (this->vec[curIndex].action[i] == action)){

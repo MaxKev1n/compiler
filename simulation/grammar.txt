@@ -54,6 +54,7 @@
 14 zero 14
 14 epsilon 13
 13 dot 15
+13 letter_i 11
 15 zero 16
 15 natNumber 16
 16 zero 16
