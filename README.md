@@ -37,7 +37,7 @@
 │   └── test.txt  
 ├── test  
 └── test.cpp  
-  
+
 1 directory, 10 files
 
 
@@ -69,3 +69,22 @@
 
 1. 修复部分bug
 2. 需要添加运算epsilon-closure的功能，并修改数字的正则文法
+
+
+
+### 2022.3.20 17:48
+
+---
+
+1. 完成添加epsilon-closure的功能
+2. 修改正则文法，以达到任务一目标
+3. 增加识别类型函数
+4. 增加识别运算符功能
+5. 添加运行脚本`run.sh`
+
+
+
+**运行截图：**
+
+<img src="image/task one.png" style="zoom: 100%;float: left" />
+
