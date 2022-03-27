@@ -117,3 +117,44 @@
 
 
 <img src="image/run_3.27.png" alt="run_3.27" style="zoom:100%;float:left" />
+
+
+
+### 2022.3.27 15:21
+
+---
+
+1. 增加语法分析器读取二型文法功能
+
+
+
+**文件结构：**
+
+. 
+├── image 
+│   ├── 2022.2.27.png 
+│   ├── run_3.27.png 
+│   ├── task one2.png 
+│   └── task one.png 
+├── lexical 
+│   ├── convert.cpp 
+│   ├── convert.h 
+│   ├── header.h 
+│   ├── lexer.cpp 
+│   ├── lexer.h 
+│   ├── lexical 
+│   ├── lexical.cpp 
+│   └── token.txt 
+├── parser 
+│   ├── header.h 
+│   ├── parser.cpp 
+│   └── parser.h 
+├── README.md 
+├── res 
+├── run.sh 
+└── simulation 
+    ├── grammar.txt 
+    └── test.txt 
+
+5 directories, 19 files 
+
