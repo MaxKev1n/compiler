@@ -103,3 +103,17 @@
 **运行结果：**
 
 <img src="image/task one2.png" style="zoom: 100%;float: left" />
+
+
+
+### 2022.3.27 13:42
+
+---
+
+1. 调整文件结构
+2. 结果输出在终端改为dump到文件夹中
+3. 调整`run.sh`文件，增加运行多个task功能
+
+
+
+<img src="image/run_3.27.png" alt="run_3.27" style="zoom:100%;float:left" />
