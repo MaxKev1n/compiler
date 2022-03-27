@@ -137,23 +137,23 @@
 │   ├── task one2.png   
 │   └── task one.png    
 ├── lexical     
-│   ├── convert.cpp 
+│   ├── convert.cpp     
 │   ├── convert.h   
 │   ├── header.h    
 │   ├── lexer.cpp   
-│   ├── lexer.h 
-│   ├── lexical 
-│   ├── lexical.cpp 
+│   ├── lexer.h     
+│   ├── lexical     
+│   ├── lexical.cpp     
 │   └── token.txt   
 ├── parser  
 │   ├── header.h    
 │   ├── parser.cpp  
 │   └── parser.h    
 ├── README.md   
-├── res 
+├── res     
 ├── run.sh  
 └── simulation  
-    ├── grammar.txt 
+    ├── grammar.txt     
     └── test.txt    
 
 5 directories, 19 files 
