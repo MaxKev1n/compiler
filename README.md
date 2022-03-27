@@ -130,31 +130,30 @@
 
 **文件结构：**
 
-. 
-├── image 
-│   ├── 2022.2.27.png 
-│   ├── run_3.27.png 
-│   ├── task one2.png 
-│   └── task one.png 
-├── lexical 
+.   
+├── image   
+│   ├── 2022.2.27.png   
+│   ├── run_3.27.png    
+│   ├── task one2.png   
+│   └── task one.png    
+├── lexical     
 │   ├── convert.cpp 
-│   ├── convert.h 
-│   ├── header.h 
-│   ├── lexer.cpp 
+│   ├── convert.h   
+│   ├── header.h    
+│   ├── lexer.cpp   
 │   ├── lexer.h 
 │   ├── lexical 
 │   ├── lexical.cpp 
-│   └── token.txt 
-├── parser 
-│   ├── header.h 
-│   ├── parser.cpp 
-│   └── parser.h 
-├── README.md 
+│   └── token.txt   
+├── parser  
+│   ├── header.h    
+│   ├── parser.cpp  
+│   └── parser.h    
+├── README.md   
 ├── res 
-├── run.sh 
-└── simulation 
+├── run.sh  
+└── simulation  
     ├── grammar.txt 
-    └── test.txt 
+    └── test.txt    
 
 5 directories, 19 files 
-
