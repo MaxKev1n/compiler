@@ -56,7 +56,7 @@ struct DFA{
         }
 
         void printDFA();
-        void dumpDFA();
+        void dumpDFA(string address_output);
         int transformState(int curIndex, char ch);
     
     private:

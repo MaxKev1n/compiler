@@ -255,11 +255,11 @@ void DFA::printDFA(){
     }
 }
 
-void DFA::dumpDFA(){
+void DFA::dumpDFA(string address_output){
     cout<<"dumping DFA List!"<<endl;
 
     std::ofstream ofs;
-    ofs.open("../res/DFA.txt");
+    ofs.open(address_output+"/DFA.txt");
     std::stringstream ss;
     for(vector<DFA_state>::iterator iter = this->vec.begin(); iter != this->vec.end();++iter){
         ss<<"index: "<<iter->index<<endl;

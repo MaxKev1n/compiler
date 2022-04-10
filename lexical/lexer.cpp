@@ -129,7 +129,7 @@ string lexer::typeRecognition(string str){
     return "identifier";
 }
 
-void lexer::run(string address_grammar, string address_txt){
+void lexer::run(string address_grammar, string address_txt, string address_output){
     NFA nfa;
     nfa.readGrammar(address_grammar);
     nfa.epClosure();
@@ -137,7 +137,7 @@ void lexer::run(string address_grammar, string address_txt){
 
     DFA dfa(nfa);
     //dfa.printDFA();
-    dfa.dumpDFA();
+    dfa.dumpDFA(address_output);
 
     vector<Tuple> res;
     string text;
@@ -173,7 +173,7 @@ void lexer::run(string address_grammar, string address_txt){
     cout<<"dumping token"<<endl;
 
     std::ofstream ofs;
-    ofs.open("../res/token.txt");
+    ofs.open(address_output+"/token.txt");
     std::stringstream ss;
     int i;
     for (i = 0;i < res.size() - 1;i++) {

@@ -45,7 +45,7 @@ struct lexer
 {
     public:
         static chType chtypeDetect(char ch);
-        void run(string address_grammar, string address_txt);
+        void run(string address_grammar, string address_txt, string address_output);
     private:
         string typeRecognition(string str);
         
