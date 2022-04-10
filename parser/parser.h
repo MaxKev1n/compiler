@@ -7,9 +7,11 @@ struct chType{
     public:
         int id;
         string name;
+        int nonTerminal_id;
         
         chType(int i, string n) : id(i), name(n){}
         chType(){};
+        chType(int i) : id(24), name("nonTerminal"), nonTerminal_id(i){}
 
         bool operator==(const chType &right){
             return this->id == right.id;
@@ -40,6 +42,7 @@ const chType letter_E(20, "letter_E");
 const chType letter_i(21, "letter_i");
 const chType space(22, "space");
 const chType zero(23, "zero");
+const chType nonTerminal(24, "nonTerminal");
 
 const set<char> let {'a','b','c','d','e','f','g','h','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                          'A','B','C','D', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
@@ -55,6 +58,8 @@ const set<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire",
 const set<string> qualifier {"abstract", "public", "private", "override", "const"};
 
 const set<string> operators {"[", "]", "+", "-", "&", "|", "~", "^", ">>", "<<", ">>>", "(", ")", "*", "<", ">"};
+
+const set<chType> terminalList {};
 
 struct Tuple{
     private:
@@ -84,7 +89,7 @@ struct Grammar
         chType getLeft() { return this->left; }
         chType getRight(int index) { return this->right[index]; }
 
-        void setLeft(chType ch) { this->left = ch; }
+        void setLeft(int i) { this->left = chType(i); }
         void addRight(chType ch) { this->right.push_back(ch); }
 };
 
@@ -92,10 +97,11 @@ struct Grammar
 struct Parser
 {
     private:
-        vector<Grammar> grammar;
+        vector<Grammar> grammarList;
         
     public:
         void readGrammar(string addr);
+        vector<chType> getFirstUnion(Grammar grammar, int index);
 };
 
 

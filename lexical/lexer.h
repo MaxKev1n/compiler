@@ -7,9 +7,11 @@ struct chType{
     public:
         int id;
         string name;
+        int nonTerminal_id;
         
         chType(int i, string n) : id(i), name(n){}
         chType(){};
+        chType(int i) : id(24), name("nonTerminal"), nonTerminal_id(i){}
 
         bool operator==(const chType &right){
             return this->id == right.id;

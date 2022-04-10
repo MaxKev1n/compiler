@@ -14,12 +14,7 @@ void Parser::readGrammar(string addr){
             stringList.push_back(pos->str());
         }
         Grammar grammar;
-        for(vector<chType>::iterator iter = chTypeList.begin(); iter != chTypeList.end();++iter){
-            if(iter->name == stringList[0]){
-                grammar.setLeft(*iter);
-                break;
-            }
-        }
+        grammar.setLeft(stoi(stringList[0]));
         for(int i = 1;i < stringList.size();i++){
             for(vector<chType>::iterator iter = chTypeList.begin(); iter != chTypeList.end();++iter){
                 if(iter->name == stringList[i]){
@@ -27,7 +22,13 @@ void Parser::readGrammar(string addr){
                     break;
                 }
             }
+            grammar.addRight(chType(stoi(stringList[i])));
         }
+        this->grammarList.push_back(grammar);
     }
     inf.close();
+}
+
+vector<chType> Parser::getFirstUnion(Grammar grammar, int index){
+    
 }
