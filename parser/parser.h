@@ -16,6 +16,10 @@ struct chType{
         bool operator==(const chType &right){
             return this->id == right.id;
         }
+
+        bool operator!=(const chType &right){
+            return this->id != right.id;
+        }
 };
 
 const chType letter(0, "letter");
@@ -88,11 +92,22 @@ struct Grammar
     public:
         chType getLeft() { return this->left; }
         chType getRight(int index) { return this->right[index]; }
+        vector<chType> getRightList() { return this->right; }
 
         void setLeft(int i) { this->left = chType(i); }
         void addRight(chType ch) { this->right.push_back(ch); }
 };
 
+struct NonTerminal
+{
+    private:
+        int id;
+        vector<chType> firstUnion;
+
+    public:
+        int firstUnionCount() { return this->firstUnion.size(); }
+        void getFirstUnion(); //calculate NonTerminal's FirstUnion
+};
 
 struct Parser
 {
@@ -101,7 +116,7 @@ struct Parser
         
     public:
         void readGrammar(string addr);
-        vector<chType> getFirstUnion(Grammar grammar, int index);
+        vector<chType> getFirstUnion(Grammar grammar, int index); //calculate grammar's FirstUnion
 };
 
 

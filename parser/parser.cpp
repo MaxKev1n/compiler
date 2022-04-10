@@ -29,6 +29,17 @@ void Parser::readGrammar(string addr){
     inf.close();
 }
 
-vector<chType> Parser::getFirstUnion(Grammar grammar, int index){
+void NonTerminal::getFirstUnion(){
     
+}
+
+vector<chType> Parser::getFirstUnion(Grammar grammar, int index){
+    vector<chType> rightList = grammar.getRightList();
+    vector<chType> res;
+    if(rightList[index] != nonTerminal){
+        res.push_back(rightList[index]);
+    }
+    else{
+
+    }
 }
