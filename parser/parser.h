@@ -3,15 +3,28 @@
 #include "header.h"
 using namespace std;
 
+struct NonTerminal
+{
+    private:
+        int id;
+        set<chType> firstUnion;
+
+    public:
+        bool operator==(const NonTerminal &right) { return this->id == right.id; }
+        void addFirstUnion(chType terminal) { this->firstUnion.insert(terminal); }
+        void setId(int id) { this->id = id; }
+        int firstUnionCount() { return this->firstUnion.size(); }
+};
+
 struct chType{
     public:
         int id;
         string name;
-        int nonTerminal_id;
+        NonTerminal nonTerminal;
         
         chType(int i, string n) : id(i), name(n){}
         chType(){};
-        chType(int i) : id(24), name("nonTerminal"), nonTerminal_id(i){}
+        chType(int i) : id(24), name("nonTerminal") { this->nonTerminal.setId(i); }
 
         bool operator==(const chType &right){
             return this->id == right.id;
@@ -98,24 +111,16 @@ struct Grammar
         void addRight(chType ch) { this->right.push_back(ch); }
 };
 
-struct NonTerminal
-{
-    private:
-        int id;
-        vector<chType> firstUnion;
-
-    public:
-        int firstUnionCount() { return this->firstUnion.size(); }
-        void getFirstUnion(); //calculate NonTerminal's FirstUnion
-};
-
 struct Parser
 {
     private:
         vector<Grammar> grammarList;
+        vector<chType> nonTerminalList;
         
     public:
         void readGrammar(string addr);
+        void getFirstUnion();
+        bool breakFistUnion(vector<int> count);
         vector<chType> getFirstUnion(Grammar grammar, int index); //calculate grammar's FirstUnion
 };
 

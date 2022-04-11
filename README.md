@@ -184,3 +184,15 @@
 
 1. 增加新类`NonTerminal`
 2. 添加函数声明`NonTerminal::getFirstUnion`、`Parser::getFirstUnion`
+
+
+
+### 2022.4.11
+
+---
+
+#### 13:31
+
+1. 类`chType`中增加类成员`nonTerminal`
+2. 更新函数`getFirstUnion()`
+3. 新增函数`breakFirstUnion()`，用于判断是否退出计算FIRST集合

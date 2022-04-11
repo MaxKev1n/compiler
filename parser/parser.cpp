@@ -15,6 +15,17 @@ void Parser::readGrammar(string addr){
         }
         Grammar grammar;
         grammar.setLeft(stoi(stringList[0]));
+
+        bool isNewNT = true;
+        for(int i = 0;i < this->nonTerminalList.size();i++){
+            if(this->nonTerminalList[i] == grammar.getLeft()){
+                isNewNT = false;
+                break;
+            }
+        }
+        if(isNewNT)
+            nonTerminalList.push_back(grammar.getLeft());
+
         for(int i = 1;i < stringList.size();i++){
             for(vector<chType>::iterator iter = chTypeList.begin(); iter != chTypeList.end();++iter){
                 if(iter->name == stringList[i]){
@@ -29,8 +40,36 @@ void Parser::readGrammar(string addr){
     inf.close();
 }
 
-void NonTerminal::getFirstUnion(){
-    
+bool Parser::breakFistUnion(vector<int> count){
+    int i = 0;
+    for(vector<chType>::iterator iter = this->nonTerminalList.begin();iter != this->nonTerminalList.end();++iter,++i){
+        if(count[i] != iter->nonTerminal.firstUnionCount())
+            return false;
+    }
+    return true;
+}
+
+void Parser::getFirstUnion(){
+    for(vector<Grammar>::iterator iter = this->grammarList.begin();iter != this->grammarList.end();++iter){
+        if(iter->getRight(0) != nonTerminal){
+            for(int i = 0;i < this->nonTerminalList.size();i++){
+                if(nonTerminalList[i].nonTerminal == (iter->getLeft()).nonTerminal){
+                    nonTerminalList[i].nonTerminal.addFirstUnion(iter->getRight(0));
+                    break;
+                }
+            }
+        }
+    }
+    while(1){
+        vector<int> count;
+        for(int i = 0;i < this->nonTerminalList.size();i++)
+            count.push_back(nonTerminalList[i].nonTerminal.firstUnionCount());
+        
+        //calculate FirstUnion
+
+        if(this->breakFistUnion(count))
+            break;
+    }
 }
 
 vector<chType> Parser::getFirstUnion(Grammar grammar, int index){
