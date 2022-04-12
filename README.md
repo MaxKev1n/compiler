@@ -121,6 +121,8 @@
 
 
 
+**运行结果：**
+
 <img src="image/run_3.27.png" alt="run_3.27" style="zoom:100%;float:left" />
 
 ---
@@ -196,3 +198,20 @@
 1. 类`chType`中增加类成员`nonTerminal`
 2. 更新函数`getFirstUnion()`
 3. 新增函数`breakFirstUnion()`，用于判断是否退出计算FIRST集合
+
+
+
+### 2022.4.12
+
+---
+
+#### 23:29
+
+1. 完成计算FIRST集功能
+2. 经过测试，暂未发现问题
+
+
+
+**运行结果：**
+
+<img src="image/run_4.12.png" alt="run_3.27" style="zoom:80%;float:left" />

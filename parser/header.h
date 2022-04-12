@@ -6,5 +6,6 @@
 #include <vector>
 #include <fstream>
 #include <regex>
+#include <assert.h>
 
 #endif

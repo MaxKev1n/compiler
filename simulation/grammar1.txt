@@ -1,0 +1,10 @@
+1 2 3
+1 letter 4
+2 epsilon
+2 letter
+3 epsilon
+3 natNumber 5
+4 2 5
+4 letter
+5 natNumber 1
+5 underline

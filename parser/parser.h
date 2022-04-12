@@ -7,13 +7,19 @@ struct NonTerminal
 {
     private:
         int id;
-        set<chType> firstUnion;
+        set<int> firstUnion;
 
     public:
+        NonTerminal() { this->id = 0; }
+        NonTerminal(int id) : id(id) {};
+
         bool operator==(const NonTerminal &right) { return this->id == right.id; }
-        void addFirstUnion(chType terminal) { this->firstUnion.insert(terminal); }
-        void setId(int id) { this->id = id; }
+        void addFirstUnion(int terminal) { this->firstUnion.insert(terminal); }
+        void addFirstUnion(set<int> firstUnion, bool hasEp);
+        set<int> getFirstUnion() { return this->firstUnion; }
         int firstUnionCount() { return this->firstUnion.size(); }
+        void printFirstUnion();
+        int getId() { return this->id; }
 };
 
 struct chType{
@@ -24,7 +30,7 @@ struct chType{
         
         chType(int i, string n) : id(i), name(n){}
         chType(){};
-        chType(int i) : id(24), name("nonTerminal") { this->nonTerminal.setId(i); }
+        chType(int i) : id(24), name("nonTerminal") { this->nonTerminal = NonTerminal(i); }
 
         bool operator==(const chType &right){
             return this->id == right.id;
@@ -33,6 +39,8 @@ struct chType{
         bool operator!=(const chType &right){
             return this->id != right.id;
         }
+
+        bool isNonTerminal() { return this->id == 24; }
 };
 
 const chType letter(0, "letter");
@@ -106,7 +114,6 @@ struct Grammar
         chType getLeft() { return this->left; }
         chType getRight(int index) { return this->right[index]; }
         vector<chType> getRightList() { return this->right; }
-
         void setLeft(int i) { this->left = chType(i); }
         void addRight(chType ch) { this->right.push_back(ch); }
 };
@@ -118,10 +125,14 @@ struct Parser
         vector<chType> nonTerminalList;
         
     public:
+        int getNonTerminalIndex(int nonTerminal);
         void readGrammar(string addr);
         void getFirstUnion();
-        bool breakFistUnion(vector<int> count);
+        bool breakFirstUnion(vector<int> count);
         vector<chType> getFirstUnion(Grammar grammar, int index); //calculate grammar's FirstUnion
+        void printFirstUnion();
+        void printGrammar();
+        void printNonTerminalList();
 };
 
 
