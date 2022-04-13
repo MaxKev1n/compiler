@@ -215,3 +215,16 @@
 **运行结果：**
 
 <img src="image/run_4.12.png" alt="run_3.27" style="zoom:80%;float:left" />
+
+
+
+### 2022.4.13
+
+---
+
+#### 15:10
+
+1. 增加类`Closure`
+
+2. 增加函数`Closure::initial()`
+3. 调整FIRST集输出格式

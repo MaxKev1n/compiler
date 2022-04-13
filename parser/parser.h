@@ -68,6 +68,7 @@ const chType letter_i(21, "letter_i");
 const chType space(22, "space");
 const chType zero(23, "zero");
 const chType nonTerminal(24, "nonTerminal");
+const chType Sign(25, "Sign");
 
 const set<char> let {'a','b','c','d','e','f','g','h','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                          'A','B','C','D', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
@@ -75,7 +76,7 @@ const set<char> natNum {'1','2','3','4','5','6','7','8','9'};
 
 static vector<chType> chTypeList {letter, natNumber, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
-                           dollar, epsilon, dot, letter_E, letter_i, space, zero};
+                           dollar, epsilon, dot, letter_E, letter_i, space, zero, Sign};
 
 const set<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "default",
                             "case", "if", "else", "elseif"};
@@ -118,6 +119,37 @@ struct Grammar
         void addRight(chType ch) { this->right.push_back(ch); }
 };
 
+struct Closure{
+    public:
+        int index;
+    private:
+        struct LR1_Grammar{
+            public:
+                int index; //dot at chType's left
+                chType left;
+                vector<chType> right;
+                set<chType> firstUnion;
+
+                LR1_Grammar() {}
+                LR1_Grammar(chType left, vector<chType> right, int index) : left(left), right(right), index(index) {}
+                bool operator==(const LR1_Grammar &right){
+                    return (this->index == right.index) && (this->right == right.right) && (this->firstUnion == right.firstUnion) && (this->left == right.left);
+                }
+        };
+
+        vector<LR1_Grammar> grammarList;
+
+    public:
+        void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure);
+        vector<LR1_Grammar> getGrammarList() { return this->grammarList; }
+
+        Closure() {}
+        Closure(int index, vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure){
+            this->index = index;
+            this->initial(grammarList, nonTerminalList, originClosure);
+        }
+};
+
 struct Parser
 {
     private:
@@ -129,10 +161,10 @@ struct Parser
         void readGrammar(string addr);
         void getFirstUnion();
         bool breakFirstUnion(vector<int> count);
-        vector<chType> getFirstUnion(Grammar grammar, int index); //calculate grammar's FirstUnion
         void printFirstUnion();
         void printGrammar();
         void printNonTerminalList();
+
 };
 
 

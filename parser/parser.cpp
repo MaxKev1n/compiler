@@ -146,25 +146,48 @@ void Parser::getFirstUnion(){
     }
 }
 
-vector<chType> Parser::getFirstUnion(Grammar grammar, int index){
-    vector<chType> rightList = grammar.getRightList();
-    vector<chType> res;
-    if(!(rightList[index].isNonTerminal())){
-        res.push_back(rightList[index]);
+void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure){
+    if(this->index == 0){
+        LR1_Grammar firstGrammar(grammarList[0].getLeft(), grammarList[0].getRightList(), 0);
+        firstGrammar.firstUnion.insert(Sign);
+        this->grammarList.push_back(firstGrammar);
     }
     else{
+        this->grammarList = originClosure.getGrammarList();
+    }
+    while(1){
+        vector<LR1_Grammar> tempList = this->grammarList;
 
+        //calculate closure I
+
+        bool isBreak = true;
+        for(int i = 0;i < this->grammarList.size();i++){
+            int j;
+            for(j = 0;j < tempList.size();j++){
+                if(this->grammarList[i] == tempList[j])
+                    break;
+            }
+            if(j == tempList.size()){
+                isBreak = false;
+                break;
+            }
+        }
+        if(isBreak)
+            break;
     }
 }
 
 void Parser::printFirstUnion(){
+    cout<<"This is the result of first union"<<endl<<string(40, '-')<<endl;
     for(int i = 0;i < this->nonTerminalList.size();i++){
         this->nonTerminalList[i].nonTerminal.printFirstUnion();
         cout<<endl;
     }
+    cout<<string(40, '-')<<endl;
 }
 
 void Parser::printGrammar(){
+    cout<<"This is the result of grammar list"<<endl<<string(40, '-')<<endl;
     for(int i = 0;i < this->grammarList.size();i++){
         cout<<this->grammarList[i].getLeft().nonTerminal.getId()<<" ";
         vector<chType> right = this->grammarList[i].getRightList();
@@ -178,7 +201,7 @@ void Parser::printGrammar(){
         }
         cout<<endl;
     }
-    cout<<endl;
+    cout<<string(40, '-')<<endl;
 }
 
 void Parser::printNonTerminalList(){

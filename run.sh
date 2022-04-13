@@ -7,7 +7,7 @@ case $task1 in
 		echo "clean previous result"
 		cd ..
 		cd lexical/
-   		g++ -std=c++11 -o lexical lexical.cpp convert.cpp lexer.cpp && ./lexical ../simulation/grammar.txt ../simulation/test.txt ../res
+   		g++ -std=c++11 -o run run.cpp convert.cpp lexer.cpp && ./run ../simulation/grammar.txt ../simulation/test.txt ../res
 		echo "task1 completed!"
 		;;
 	[nN])
@@ -20,7 +20,8 @@ read -r -p "Run Task2? [Y/n] " task1
 case $task1 in 
 	[yY])
 		cd parser/
-		g++ -std=c++11 -o parser parser.cpp && ./parser
+		g++ -std=c++11 -o parser parser.cpp && ./parser ../simulation/grammar1.txt
+		echo "task2 completed!"
 		;;
 	[nN])
 		read -p "Please enter any key to exit" exit
@@ -30,5 +31,5 @@ case $task1 in
 		read -p "Please enter any key to exit" exit
 		exit 1
 esac
-read -p $'Complete task2!\x0aPlease enter any key to exit' exit
-		exit 1
+#read -p $'Complete task!\x0aPlease enter any key to exit' exit
+#		exit 1
