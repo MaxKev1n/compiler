@@ -146,19 +146,132 @@ void Parser::getFirstUnion(){
     }
 }
 
-void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure){
-    if(this->index == 0){
-        LR1_Grammar firstGrammar(grammarList[0].getLeft(), grammarList[0].getRightList(), 0);
-        firstGrammar.firstUnion.insert(Sign);
-        this->grammarList.push_back(firstGrammar);
+vector<chType> Closure::getRightTerminal(vector<chType> nonTerminalList, vector<chType> str){
+    vector<chType> res;
+    for(int i = 0;i < str.size();i++){
+        if(str[i].isNonTerminal()){
+            chType NT;
+            for(int j = 0;j < nonTerminalList.size();j++){
+                if(nonTerminalList[j] == str[i])
+                    NT = nonTerminalList[j];
+            }
+            bool hasEp = false;
+            set<int> firstUnion = NT.nonTerminal.getFirstUnion();
+            for(set<int>::iterator iter = firstUnion.begin();iter != firstUnion.end();++iter){
+                if(*iter == 18)
+                    hasEp = true;
+                else{
+                    for(int index = 0;index < chTypeList.size();index++){
+                        if(*iter == chTypeList[index].id){
+                            res.push_back(chTypeList[index]);
+                            break;
+                        }
+                    }
+                }
+            }
+            if(!hasEp)
+                break;
+        }
+        else{
+            res.push_back(str[i]);
+            break;
+        }
     }
-    else{
-        this->grammarList = originClosure.getGrammarList();
-    }
+    return res;
+}
+
+void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalList){
+    LR1_Grammar firstGrammar(grammarList[0].getLeft(), grammarList[0].getRightList(), 0);
+    firstGrammar.rightTerminal = Sign;
+    this->grammarList.push_back(firstGrammar);
+
     while(1){
         vector<LR1_Grammar> tempList = this->grammarList;
 
-        //calculate closure I
+        for(int i = 0;i < this->grammarList.size();i++){
+            chType ch = this->grammarList[i].right[0];
+            if(ch.isNonTerminal()){
+                for(int j = 0;j < grammarList.size();j++){
+                    if(ch.nonTerminal == grammarList[j].getLeft().nonTerminal){
+                        LR1_Grammar newGrammar(ch, grammarList[j].getRightList(), 0);
+                        vector<chType> str;
+                        for(int index = 1;index < this->grammarList[i].right.size();index++){
+                            str.push_back(this->grammarList[i].right[index]);
+                        }
+                        str.push_back(this->grammarList[i].rightTerminal);
+                        vector<chType> rightTerminalList = this->getRightTerminal(nonTerminalList, str);
+                        for(int index = 0;index < rightTerminalList.size();index++){
+                            LR1_Grammar tempGrammar = newGrammar;
+                            tempGrammar.rightTerminal = rightTerminalList[index];
+                            bool isNew = true;
+                            for(int k = 0;k < this->grammarList.size();k++){
+                                if(tempGrammar == this->grammarList[k]){
+                                    isNew = false;
+                                    break;
+                                }
+                            }
+                            if(isNew)
+                                this->grammarList.push_back(tempGrammar);
+                        }
+                    }
+                }
+            }
+        }
+
+        bool isBreak = true;
+        for(int i = 0;i < this->grammarList.size();i++){
+            int j;
+            for(j = 0;j < tempList.size();j++){
+                if(this->grammarList[i] == tempList[j])
+                    break;
+            }
+            if(j == tempList.size()){
+                isBreak = false;
+                break;
+            }
+        }
+    if(isBreak)
+        break;
+    }
+}
+
+void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure, chType moveType){
+    this->grammarList = originClosure.getGrammarList();
+    this->moveType = moveType;
+
+    while(1){
+        vector<LR1_Grammar> tempList = this->grammarList;
+
+        for(int i = 0;i < this->grammarList.size();i++){
+            int rightIndex = this->grammarList[i].index;
+            chType ch = this->grammarList[i].right[rightIndex];
+            if(ch.isNonTerminal()){
+                for(int j = 0;j < grammarList.size();j++){
+                    if(ch.nonTerminal == grammarList[j].getLeft().nonTerminal){
+                        LR1_Grammar newGrammar(ch, grammarList[j].getRightList(), 0);
+                        vector<chType> str;
+                        for(int index = 1;index < this->grammarList[i].right.size();index++){
+                            str.push_back(this->grammarList[i].right[index]);
+                        }
+                        str.push_back(this->grammarList[i].rightTerminal);
+                        vector<chType> rightTerminalList = this->getRightTerminal(nonTerminalList, str);
+                        for(int index = 0;index < rightTerminalList.size();index++){
+                            LR1_Grammar tempGrammar = newGrammar;
+                            tempGrammar.rightTerminal = rightTerminalList[index];
+                            bool isNew = true;
+                            for(int k = 0;k < this->grammarList.size();k++){
+                                if(tempGrammar == this->grammarList[k]){
+                                    isNew = false;
+                                    break;
+                                }
+                            }
+                            if(isNew)
+                                this->grammarList.push_back(tempGrammar);
+                        }
+                    }
+                }
+            }
+        }
 
         bool isBreak = true;
         for(int i = 0;i < this->grammarList.size();i++){
@@ -208,6 +321,31 @@ void Parser::printNonTerminalList(){
     for(int i = 0;i < this->nonTerminalList.size();i++)
         cout<<this->nonTerminalList[i].nonTerminal.getId()<<" ";
     cout<<endl;
+}
+
+void Parser::createClosureList(){
+    Closure closure0;
+    closure0.index = 0;
+    closure0.initial(this->grammarList, this->nonTerminalList);
+    this->closureList.push_back(closure0);
+    while(1){
+        vector<Closure> tempList = this->closureList;
+
+        bool isBreak = true;
+        for(int i = 0;i < this->closureList.size();i++){
+            int j;
+            for(j = 0;j < tempList.size();j++){
+                if(this->closureList[i] == tempList[j])
+                    break;
+            }
+            if(j == tempList.size()){
+                isBreak = false;
+                break;
+            }
+        }
+        if(isBreak)
+            break;
+    }
 }
 
 int main(int argc,char *argv[]){

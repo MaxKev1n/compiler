@@ -7,5 +7,6 @@
 #include <fstream>
 #include <regex>
 #include <assert.h>
+#include <map>
 
 #endif

@@ -36,8 +36,16 @@ struct chType{
             return this->id == right.id;
         }
 
+        bool operator==(const chType &right) const{
+            return this->id == right.id;
+        }
+
         bool operator!=(const chType &right){
             return this->id != right.id;
+        }
+
+        bool operator<(const chType &right) const{
+            return this->id < right.id;
         }
 
         bool isNonTerminal() { return this->id == 24; }
@@ -122,31 +130,34 @@ struct Grammar
 struct Closure{
     public:
         int index;
+        chType moveType = NULL;
+        //store map from moveType to closure's index
     private:
         struct LR1_Grammar{
             public:
                 int index; //dot at chType's left
                 chType left;
                 vector<chType> right;
-                set<chType> firstUnion;
+                chType rightTerminal;
 
                 LR1_Grammar() {}
                 LR1_Grammar(chType left, vector<chType> right, int index) : left(left), right(right), index(index) {}
                 bool operator==(const LR1_Grammar &right){
-                    return (this->index == right.index) && (this->right == right.right) && (this->firstUnion == right.firstUnion) && (this->left == right.left);
+                    return (this->index == right.index) && (this->right == right.right) && (this->rightTerminal == right.rightTerminal) && (this->left == right.left);
                 }
         };
 
         vector<LR1_Grammar> grammarList;
 
     public:
-        void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure);
+        void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure, chType moveType);
+        void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList);
         vector<LR1_Grammar> getGrammarList() { return this->grammarList; }
+        vector<chType> getRightTerminal(vector<chType> nonTerminalList, vector<chType> str);
 
         Closure() {}
-        Closure(int index, vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure){
-            this->index = index;
-            this->initial(grammarList, nonTerminalList, originClosure);
+        bool operator==(const Closure &right) const{
+            return (this->moveType == right.moveType) && (this->grammarList == right.grammarList);
         }
 };
 
@@ -155,6 +166,7 @@ struct Parser
     private:
         vector<Grammar> grammarList;
         vector<chType> nonTerminalList;
+        vector<Closure> closureList;
         
     public:
         int getNonTerminalIndex(int nonTerminal);
@@ -164,6 +176,7 @@ struct Parser
         void printFirstUnion();
         void printGrammar();
         void printNonTerminalList();
+        void createClosureList();
 
 };
 
