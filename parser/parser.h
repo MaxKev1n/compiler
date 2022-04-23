@@ -148,6 +148,7 @@ struct Closure{
         };
 
         vector<LR1_Grammar> grammarList;
+        vector<chType> moveTypeList;
 
     public:
         void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure, chType moveType);

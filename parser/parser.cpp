@@ -195,7 +195,7 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
                     if(ch.nonTerminal == grammarList[j].getLeft().nonTerminal){
                         LR1_Grammar newGrammar(ch, grammarList[j].getRightList(), 0);
                         vector<chType> str;
-                        for(int index = 1;index < this->grammarList[i].right.size();index++){
+                        for(int index = this->grammarList[i].index + 1;index < this->grammarList[i].right.size();index++){
                             str.push_back(this->grammarList[i].right[index]);
                         }
                         str.push_back(this->grammarList[i].rightTerminal);
@@ -230,14 +230,36 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
                 break;
             }
         }
-    if(isBreak)
-        break;
+        if(isBreak){
+            for(int i = 0;i < this->grammarList.size();i++){
+                LR1_Grammar grammar = this->grammarList[i];
+                if(grammar.index < grammar.right.size();i++)
+                    this->moveTypeList.push_back(grammar.right[index]);
+            }
+            break;
+        }
     }
 }
 
 void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure, chType moveType){
-    this->grammarList = originClosure.getGrammarList();
     this->moveType = moveType;
+    for(int i = 0;i < originClosure.grammarList.size();i++){
+        LR1_Grammar grammar = originClosure.grammarList[i];
+        if(grammar.index >= grammar.right.size())
+            continue;
+        if(moveType.isNonTerminal()){
+            if(moveType.nonTerminal == grammar.right[grammar.index].nonTerminal){
+                grammar.index++;
+                this->grammarList.push_back(grammar);
+            }
+        }
+        else{
+            if(moveType == grammar.right[grammar.index]){
+                grammar.index++;
+                this->grammarList.push_back(grammar);
+            }
+        }
+    }
 
     while(1){
         vector<LR1_Grammar> tempList = this->grammarList;
@@ -250,7 +272,7 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
                     if(ch.nonTerminal == grammarList[j].getLeft().nonTerminal){
                         LR1_Grammar newGrammar(ch, grammarList[j].getRightList(), 0);
                         vector<chType> str;
-                        for(int index = 1;index < this->grammarList[i].right.size();index++){
+                        for(int index = this->grammarList[i].index + 1;index < this->grammarList[i].right.size();index++){
                             str.push_back(this->grammarList[i].right[index]);
                         }
                         str.push_back(this->grammarList[i].rightTerminal);
@@ -285,8 +307,14 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
                 break;
             }
         }
-        if(isBreak)
+        if(isBreak){
+            for(int i = 0;i < this->grammarList.size();i++){
+                LR1_Grammar grammar = this->grammarList[i];
+                if(grammar.index < grammar.right.size();i++)
+                    this->moveTypeList.push_back(grammar.right[index]);
+            }
             break;
+        }
     }
 }
 
@@ -328,24 +356,7 @@ void Parser::createClosureList(){
     closure0.index = 0;
     closure0.initial(this->grammarList, this->nonTerminalList);
     this->closureList.push_back(closure0);
-    while(1){
-        vector<Closure> tempList = this->closureList;
-
-        bool isBreak = true;
-        for(int i = 0;i < this->closureList.size();i++){
-            int j;
-            for(j = 0;j < tempList.size();j++){
-                if(this->closureList[i] == tempList[j])
-                    break;
-            }
-            if(j == tempList.size()){
-                isBreak = false;
-                break;
-            }
-        }
-        if(isBreak)
-            break;
-    }
+    //calculate closureList
 }
 
 int main(int argc,char *argv[]){
