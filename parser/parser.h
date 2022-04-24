@@ -130,10 +130,45 @@ struct Grammar
 struct Closure{
     public:
         int index;
+        int lastIndex;
         chType moveType;
         vector<chType> moveTypeList;
         vector<bool> visitMatrix;
-        //store map from moveType to closure's index
+        vector<int> nextState;
+        vector<chType> returnList;
+        vector<int> returnIndex;
+
+        struct Action{
+            public:
+                int type; //0: NULL, 1: shift, 2: return, 3: accept
+                int number;
+
+                Action() { type = 0; }
+                Action(int type, int number) : type(type), number(number) {}
+                Action(int type) : type(type) {}
+
+                bool operator==(const Action &right) const{
+                    if(this->type == 3 && right.type == 3){
+                        return this->type == right.type;
+                    }
+                    else{
+                        return (this->type == right.type) && (this->number == right.number);
+                    }
+                }
+        };
+
+        struct Goto{
+            public:
+                int number; //-1: NULL
+
+                Goto() { number = -1; }
+                Goto(int number) : number(number) {}
+
+                bool operator==(const Goto &right) const{
+                    return this->number == right.number;
+                }
+        };
+
     private:
         struct LR1_Grammar{
             public:
@@ -141,9 +176,10 @@ struct Closure{
                 chType left;
                 vector<chType> right;
                 chType rightTerminal;
+                int grammarIndex; //index in the input
 
                 LR1_Grammar() {}
-                LR1_Grammar(chType left, vector<chType> right, int index) : left(left), right(right), index(index) {}
+                LR1_Grammar(chType left, vector<chType> right, int index, int grammarIndex) : left(left), right(right), index(index), grammarIndex(grammarIndex) {}
                 bool operator==(const LR1_Grammar &right) const{
                     return (this->index == right.index) && (this->right == right.right) && (this->rightTerminal == right.rightTerminal) && (this->left == right.left);
                 }
@@ -152,11 +188,15 @@ struct Closure{
 
     public:
         vector<LR1_Grammar> grammarList;
+        vector<Action> ActionList;
+        vector<Goto> GotoList;
+
         void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure, chType moveType);
         void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList);
         vector<LR1_Grammar> getGrammarList() { return this->grammarList; }
         int nextVisit();
         vector<chType> getRightTerminal(vector<chType> nonTerminalList, vector<chType> str);
+        int getGrammarIndex(int index) { return this->grammarList[index].grammarIndex; }
 
         Closure() {}
         bool operator==(const Closure &right) const{
@@ -182,6 +222,7 @@ struct Parser
         void createClosureList();
         void printClosureList();
         void dumpClosure(string address_output);
+        void constructTable();
 
 };
 

@@ -195,7 +195,8 @@ void Closure::LR1_Grammar::printGrammar(){
 
 void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalList){
     this->index = 0;
-    LR1_Grammar firstGrammar(grammarList[0].getLeft(), grammarList[0].getRightList(), 0);
+    this->lastIndex = 0;
+    LR1_Grammar firstGrammar(grammarList[0].getLeft(), grammarList[0].getRightList(), 0, 0);
     firstGrammar.rightTerminal = Sign;
     this->grammarList.push_back(firstGrammar);
 
@@ -207,7 +208,7 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
             if(ch.isNonTerminal()){
                 for(int j = 0;j < grammarList.size();j++){
                     if(ch.nonTerminal == grammarList[j].getLeft().nonTerminal){
-                        LR1_Grammar newGrammar(ch, grammarList[j].getRightList(), 0);
+                        LR1_Grammar newGrammar(ch, grammarList[j].getRightList(), 0, j);
                         vector<chType> str;
                         for(int index = this->grammarList[i].index + 1;index < this->grammarList[i].right.size();index++){
                             str.push_back(this->grammarList[i].right[index]);
@@ -246,10 +247,33 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
         }
         if(isBreak){
             for(int i = 0;i < this->grammarList.size();i++){
+                if((!this->grammarList[i].rightTerminal.isNonTerminal()) && (this->grammarList[i].index == this->grammarList[i].right.size())){
+                    returnList.push_back(this->grammarList[i].rightTerminal);
+                    returnIndex.push_back(this->grammarList[i].grammarIndex);
+                }
+            }
+            for(int i = 0;i < this->grammarList.size();i++){
                 LR1_Grammar grammar = this->grammarList[i];
                 if(grammar.index < grammar.right.size()){
-                    this->moveTypeList.push_back(grammar.right[index]);
-                    this->visitMatrix.push_back(false);
+                    bool isNewMoveType = true;
+                    for(int j = 0;j < this->moveTypeList.size();j++){
+                        if(grammar.right[grammar.index].isNonTerminal()){
+                            if(grammar.right[grammar.index].nonTerminal == this->moveTypeList[j].nonTerminal){
+                                isNewMoveType = false;
+                                break;
+                            }
+                        }
+                        else{
+                            if(grammar.right[grammar.index] == this->moveTypeList[j]){
+                                isNewMoveType = false;
+                                break;
+                            }
+                        }
+                    }
+                    if(isNewMoveType){
+                        this->moveTypeList.push_back(grammar.right[grammar.index]);
+                        this->visitMatrix.push_back(false);
+                    }
                 }
             }
             break;
@@ -289,7 +313,7 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
             if(ch.isNonTerminal()){
                 for(int j = 0;j < grammarList.size();j++){
                     if(ch.nonTerminal == grammarList[j].getLeft().nonTerminal){
-                        LR1_Grammar newGrammar(ch, grammarList[j].getRightList(), 0);
+                        LR1_Grammar newGrammar(ch, grammarList[j].getRightList(), 0, j);
                         vector<chType> str;
                         for(int index = this->grammarList[i].index + 1;index < this->grammarList[i].right.size();index++){
                             str.push_back(this->grammarList[i].right[index]);
@@ -327,11 +351,29 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
             }
         }
         if(isBreak){
+            this->lastIndex = originClosure.index;
             for(int i = 0;i < this->grammarList.size();i++){
                 LR1_Grammar grammar = this->grammarList[i];
                 if(grammar.index < grammar.right.size()){
-                    this->moveTypeList.push_back(grammar.right[grammar.index]);
-                    this->visitMatrix.push_back(false);
+                    bool isNewMoveType = true;
+                    for(int j = 0;j < this->moveTypeList.size();j++){
+                        if(grammar.right[grammar.index].isNonTerminal()){
+                            if(grammar.right[grammar.index].nonTerminal == this->moveTypeList[j].nonTerminal){
+                                isNewMoveType = false;
+                                break;
+                            }
+                        }
+                        else{
+                            if(grammar.right[grammar.index] == this->moveTypeList[j]){
+                                isNewMoveType = false;
+                                break;
+                            }
+                        }
+                    }
+                    if(isNewMoveType){
+                        this->moveTypeList.push_back(grammar.right[grammar.index]);
+                        this->visitMatrix.push_back(false);
+                    }
                 }
             }
             break;
@@ -402,13 +444,14 @@ void Parser::createClosureList(){
             newClosure.initial(this->grammarList, this->nonTerminalList, originClosure, moveType);
             bool isNew = true;
             for(int i = 0;i < this->closureList.size();i++){
-                if(newClosure == this->closureList[i]) // need to update the judge mechanism of closure equality
+                if(newClosure == this->closureList[i])
                     isNew = false;
             }
             if(isNew){
                 int newIndex = this->closureList.size();
                 newClosure.index = newIndex;
                 closureList[index].visitMatrix[nextVisit] = true;
+                closureList[index].nextState.push_back(newIndex);
                 closureList.push_back(newClosure);
                 closureStack.push(newIndex);
             }
@@ -427,8 +470,27 @@ void Parser::dumpClosure(string address_output){
     ofs.open(address_output+"/Closure.txt");
     std::stringstream ss;
     for(vector<Closure>::iterator iter = this->closureList.begin(); iter != this->closureList.end();++iter){
-        ss<<"Closure index:"<<iter->index<<endl<<endl;
+        ss<<"Closure index: "<<iter->index<<endl;
+        ss<<"Last Closure index: "<<iter->lastIndex<<endl<<endl;
+        ss<<"Next Closure and its move chType: "<<endl;
+        for(int i = 0;i < iter->moveTypeList.size();i++){
+            ss<<iter->nextState[i]<<" ";
+            if(iter->moveTypeList[i].isNonTerminal()){
+                ss<<iter->moveTypeList[i].name<<'.'<<iter->moveTypeList[i].nonTerminal.getId()<<endl;
+            }
+            else{
+                ss<<iter->moveTypeList[i].name<<endl;
+            }
+        }
+        ss<<endl;
+        if(iter->moveType.isNonTerminal()){
+            ss<<"Move chType: "<<iter->moveType.name<<'.'<<iter->moveType.nonTerminal.getId()<<endl<<endl;
+        }
+        else{
+            ss<<"Move chType: "<<iter->moveType.name<<endl<<endl;
+        }
         for(int i = 0;i < iter->grammarList.size();i++){
+            ss<<"GrammarIndex: "<<iter->getGrammarIndex(i)<<"  ";
             ss<<iter->grammarList[i].left.nonTerminal.getId()<<"->";
             for(int j = 0;j < iter->grammarList[i].right.size();j++){
                 if(iter->grammarList[i].index == j)
@@ -440,12 +502,98 @@ void Parser::dumpClosure(string address_output){
                     ss<<iter->grammarList[i].right[j].name<<" ";
                 }
             }
-            ss<<","<<iter->grammarList[i].rightTerminal.name<<endl;;
+            if(iter->grammarList[i].index == iter->grammarList[i].right.size())
+                ss<<".";
+            ss<<","<<iter->grammarList[i].rightTerminal.name<<endl;
+        }
+        ss<<endl<<"Action Row:"<<endl;
+        for(int i = 0;i < chTypeList.size();i++){
+            ss<<chTypeList[i].name<<": ";
+            if(iter->ActionList[i].type == 1){
+                ss<<"S"<<iter->ActionList[i].number;
+            }
+            else if(iter->ActionList[i].type == 2){
+                ss<<"r"<<iter->ActionList[i].number;
+            }
+            else if(iter->ActionList[i].type == 3){
+                ss<<"acc";
+            }
+            ss<<endl;
+        }
+        ss<<endl<<"Goto Row:"<<endl;
+        for(int i = 0;i < this->nonTerminalList.size();i++){
+            ss<<this->nonTerminalList[i].nonTerminal.getId()<<": ";
+            if(iter->GotoList[i].number != -1){
+                ss<<iter->GotoList[i].number;
+            }
+            ss<<endl;
         }
         ss<<"----------"<<endl;
     }
     ofs << ss.rdbuf();
     ofs.close();
+}
+
+void Parser::constructTable(){
+    for(int i = 0;i < this->closureList.size();i++){
+        //state accept
+        if((this->closureList[i].grammarList[0].left.nonTerminal.getId() == 0) && (this->closureList[i].grammarList[0].index == 1) && (this->closureList[i].grammarList[0].rightTerminal == Sign)){
+            for(int j = 0;j < chTypeList.size();j++){
+                if(chTypeList[j] == Sign){
+                    this->closureList[i].ActionList.push_back(Closure::Action(3));
+                }
+                else{
+                    this->closureList[i].ActionList.push_back(Closure::Action());
+                }
+            }
+            for(int j = 0;j < this->nonTerminalList.size();j++){
+                this->closureList[i].GotoList.push_back(Closure::Goto());
+            }
+            continue;
+        }
+        //other states
+        //construct action table
+        for(int j = 0;j < chTypeList.size();j++){
+            //return
+            for(int m = 0;m < this->closureList[i].returnList.size();m++){
+                if(this->closureList[i].returnList[m] == chTypeList[j]){
+                    this->closureList[i].ActionList.push_back(Closure::Action(2, this->closureList[i].returnIndex[m]));
+                }
+            }
+            //shift or null
+            bool hasMoveType = false;
+            int k;
+            for(k = 0;k < this->closureList[i].moveTypeList.size();k++){
+                if(this->closureList[i].moveTypeList[k] == chTypeList[j]){
+                    hasMoveType = true;
+                    break;
+                }
+            }
+            if(hasMoveType){
+                this->closureList[i].ActionList.push_back(Closure::Action(1, this->closureList[i].nextState[k]));
+            }
+            else{
+                this->closureList[i].ActionList.push_back(Closure::Action());
+            }
+        }
+        //construct goto table
+        for(int j = 0;j < this->nonTerminalList.size();j++){
+            bool hasMoveType = false;
+            int m;
+            for(m = 0;m < this->closureList[i].moveTypeList.size();m++){
+                if(this->closureList[i].moveTypeList[m].isNonTerminal() && (this->closureList[i].moveTypeList[m].nonTerminal == this->nonTerminalList[j].nonTerminal)){
+                    hasMoveType = true;
+                    break;
+                }
+            }
+            if(hasMoveType){
+                this->closureList[i].GotoList.push_back(Closure::Goto(this->closureList[i].nextState[m]));
+            }
+            else{
+                this->closureList[i].GotoList.push_back(Closure::Goto());
+            }
+        }
+    }
 }
 
 void Parser::printClosureList(){
@@ -470,6 +618,7 @@ int main(int argc,char *argv[]){
     parser.getFirstUnion();
     parser.printFirstUnion();
     parser.createClosureList();
+    parser.constructTable();
     parser.dumpClosure(address_output);
     return 0;
 }

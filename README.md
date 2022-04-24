@@ -265,3 +265,9 @@
 **运行结果**：
 
 <img src="image/run_4.24_2.png" alt="run_3.27" style="zoom:80%;float:left" />
+
+---
+
+1. 更新dump closure，输出更多数据
+2. 增加action表与goto表
+3. closure类中增加下一个状态的相关信息
