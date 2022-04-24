@@ -181,6 +181,7 @@ vector<chType> Closure::getRightTerminal(vector<chType> nonTerminalList, vector<
 }
 
 void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalList){
+    this->index = 0;
     LR1_Grammar firstGrammar(grammarList[0].getLeft(), grammarList[0].getRightList(), 0);
     firstGrammar.rightTerminal = Sign;
     this->grammarList.push_back(firstGrammar);
@@ -235,6 +236,7 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
                 LR1_Grammar grammar = this->grammarList[i];
                 if(grammar.index < grammar.right.size();i++)
                     this->moveTypeList.push_back(grammar.right[index]);
+                    this->visitMatrix.push_back(false);
             }
             break;
         }
@@ -312,10 +314,19 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
                 LR1_Grammar grammar = this->grammarList[i];
                 if(grammar.index < grammar.right.size();i++)
                     this->moveTypeList.push_back(grammar.right[index]);
+                    this->visitMatrix.push_back(false);
             }
             break;
         }
     }
+}
+
+int Closure::nextVisit(){
+    for(int i = 0;i < this->visitMatrix.size();i++){
+        if(!this->visitMatrix[i])
+            return i;
+    }
+    return -1;
 }
 
 void Parser::printFirstUnion(){
@@ -357,6 +368,39 @@ void Parser::createClosureList(){
     closure0.initial(this->grammarList, this->nonTerminalList);
     this->closureList.push_back(closure0);
     //calculate closureList
+    stack<int> closureStack;
+    closureStack.push(0);
+
+    while(!closureStack.empty()){
+        int index = closureStack.top();
+        Closure originClosure = closureList[index];
+        int nextVisit = originClosure.nextVisit();
+        if(nextVisit == -1){
+            closureStack.pop();
+        }
+        else{
+            Closure newClosure;
+            chType moveType = originClosure.moveTypeList[nextVisit];
+            newClosure.initial(this->grammarList, this->nonTerminalList, originClosure, moveType);
+            
+            bool isNew = true;
+            for(int i = 0;i < this->closureList.size();i++){
+                if(newClosure == this->closureList[i]) // need to update the judge mechanism of closure equality
+                    isNew = false;
+            }
+            if(isNew){
+                int newIndex = this->closureList.size();
+                newClosure.index = newIndex;
+                closureList[index].visitMatrix[nextVisit] = true;
+                closureList.push_back(newClosure);
+                closureStack.push(newIndex);
+            }
+            else{
+                closureList[index].visitMatrix[nextVisit] = true;
+            }
+        }
+        
+    }
 }
 
 int main(int argc,char *argv[]){

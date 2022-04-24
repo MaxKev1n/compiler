@@ -8,5 +8,6 @@
 #include <regex>
 #include <assert.h>
 #include <map>
+#include <stack>
 
 #endif

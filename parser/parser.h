@@ -131,6 +131,8 @@ struct Closure{
     public:
         int index;
         chType moveType = NULL;
+        vector<chType> moveTypeList;
+        vector<bool> visitMatrix;
         //store map from moveType to closure's index
     private:
         struct LR1_Grammar{
@@ -148,12 +150,12 @@ struct Closure{
         };
 
         vector<LR1_Grammar> grammarList;
-        vector<chType> moveTypeList;
 
     public:
         void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure, chType moveType);
         void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList);
         vector<LR1_Grammar> getGrammarList() { return this->grammarList; }
+        int nextVisit();
         vector<chType> getRightTerminal(vector<chType> nonTerminalList, vector<chType> str);
 
         Closure() {}
