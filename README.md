@@ -268,6 +268,14 @@
 
 ---
 
+#### 23:34
+
 1. 更新dump closure，输出更多数据
-2. 增加action表与goto表
+2. 完成action表与goto表
 3. closure类中增加下一个状态的相关信息
+
+**WARNING：**如果未执行过任务一，暂时需要先在目录中创建文件夹`/res`
+
+**运行结果**：
+
+<img src="image/run_4.24_3.png" alt="run_3.27" style="zoom:80%;float:left" />

@@ -248,8 +248,8 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
         if(isBreak){
             for(int i = 0;i < this->grammarList.size();i++){
                 if((!this->grammarList[i].rightTerminal.isNonTerminal()) && (this->grammarList[i].index == this->grammarList[i].right.size())){
-                    returnList.push_back(this->grammarList[i].rightTerminal);
-                    returnIndex.push_back(this->grammarList[i].grammarIndex);
+                    this->returnList.push_back(this->grammarList[i].rightTerminal);
+                    this->returnIndex.push_back(this->grammarList[i].grammarIndex);
                 }
             }
             for(int i = 0;i < this->grammarList.size();i++){
@@ -352,6 +352,12 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
         }
         if(isBreak){
             this->lastIndex = originClosure.index;
+            for(int i = 0;i < this->grammarList.size();i++){
+                if((!this->grammarList[i].rightTerminal.isNonTerminal()) && (this->grammarList[i].index == this->grammarList[i].right.size())){
+                    this->returnList.push_back(this->grammarList[i].rightTerminal);
+                    this->returnIndex.push_back(this->grammarList[i].grammarIndex);
+                }
+            }
             for(int i = 0;i < this->grammarList.size();i++){
                 LR1_Grammar grammar = this->grammarList[i];
                 if(grammar.index < grammar.right.size()){
@@ -521,7 +527,7 @@ void Parser::dumpClosure(string address_output){
             ss<<endl;
         }
         ss<<endl<<"Goto Row:"<<endl;
-        for(int i = 0;i < this->nonTerminalList.size();i++){
+        for(int i = 1;i < this->nonTerminalList.size();i++){
             ss<<this->nonTerminalList[i].nonTerminal.getId()<<": ";
             if(iter->GotoList[i].number != -1){
                 ss<<iter->GotoList[i].number;
@@ -537,7 +543,7 @@ void Parser::dumpClosure(string address_output){
 void Parser::constructTable(){
     for(int i = 0;i < this->closureList.size();i++){
         //state accept
-        if((this->closureList[i].grammarList[0].left.nonTerminal.getId() == 0) && (this->closureList[i].grammarList[0].index == 1) && (this->closureList[i].grammarList[0].rightTerminal == Sign)){
+        if((this->closureList[i].grammarList[0].left.nonTerminal.getId() == 1) && (this->closureList[i].grammarList[0].index == 1) && (this->closureList[i].grammarList[0].rightTerminal == Sign)){
             for(int j = 0;j < chTypeList.size();j++){
                 if(chTypeList[j] == Sign){
                     this->closureList[i].ActionList.push_back(Closure::Action(3));
@@ -555,11 +561,15 @@ void Parser::constructTable(){
         //construct action table
         for(int j = 0;j < chTypeList.size();j++){
             //return
+            bool isContinue = false;
             for(int m = 0;m < this->closureList[i].returnList.size();m++){
                 if(this->closureList[i].returnList[m] == chTypeList[j]){
                     this->closureList[i].ActionList.push_back(Closure::Action(2, this->closureList[i].returnIndex[m]));
+                    isContinue = true;
                 }
             }
+            if(isContinue)
+                continue;
             //shift or null
             bool hasMoveType = false;
             int k;
