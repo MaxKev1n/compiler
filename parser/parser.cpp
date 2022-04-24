@@ -180,6 +180,19 @@ vector<chType> Closure::getRightTerminal(vector<chType> nonTerminalList, vector<
     return res;
 }
 
+void Closure::LR1_Grammar::printGrammar(){
+    cout<<this->left.nonTerminal.getId()<<"->";
+    for(int i = 0;i < this->right.size();i++){
+        if(this->right[i].isNonTerminal()){
+            cout<<this->right[i].nonTerminal.getId()<<" ";
+        }
+        else{
+            cout<<this->right[i].name<<" ";
+        }
+    }
+    cout<<","<<index<<","<<this->rightTerminal.name<<endl;
+}
+
 void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalList){
     this->index = 0;
     LR1_Grammar firstGrammar(grammarList[0].getLeft(), grammarList[0].getRightList(), 0);
@@ -234,9 +247,10 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
         if(isBreak){
             for(int i = 0;i < this->grammarList.size();i++){
                 LR1_Grammar grammar = this->grammarList[i];
-                if(grammar.index < grammar.right.size();i++)
+                if(grammar.index < grammar.right.size()){
                     this->moveTypeList.push_back(grammar.right[index]);
                     this->visitMatrix.push_back(false);
+                }
             }
             break;
         }
@@ -265,9 +279,12 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
 
     while(1){
         vector<LR1_Grammar> tempList = this->grammarList;
-
         for(int i = 0;i < this->grammarList.size();i++){
             int rightIndex = this->grammarList[i].index;
+
+            if(rightIndex == this->grammarList[i].right.size())
+                continue;
+
             chType ch = this->grammarList[i].right[rightIndex];
             if(ch.isNonTerminal()){
                 for(int j = 0;j < grammarList.size();j++){
@@ -312,9 +329,10 @@ void Closure::initial(vector<Grammar> grammarList, vector<chType> nonTerminalLis
         if(isBreak){
             for(int i = 0;i < this->grammarList.size();i++){
                 LR1_Grammar grammar = this->grammarList[i];
-                if(grammar.index < grammar.right.size();i++)
-                    this->moveTypeList.push_back(grammar.right[index]);
+                if(grammar.index < grammar.right.size()){
+                    this->moveTypeList.push_back(grammar.right[grammar.index]);
                     this->visitMatrix.push_back(false);
+                }
             }
             break;
         }
@@ -382,7 +400,6 @@ void Parser::createClosureList(){
             Closure newClosure;
             chType moveType = originClosure.moveTypeList[nextVisit];
             newClosure.initial(this->grammarList, this->nonTerminalList, originClosure, moveType);
-            
             bool isNew = true;
             for(int i = 0;i < this->closureList.size();i++){
                 if(newClosure == this->closureList[i]) // need to update the judge mechanism of closure equality
@@ -403,6 +420,17 @@ void Parser::createClosureList(){
     }
 }
 
+void Parser::printClosureList(){
+    cout<<"This is the result of closure calculate"<<endl<<string(40, '-')<<endl;
+    for(int i = 0;i < this->closureList.size();i++){
+        cout<<"closure index:"<<i<<endl;
+        for(int j = 0;j < this->closureList[i].grammarList.size();j++)
+            this->closureList[i].grammarList[j].printGrammar();
+        cout<<endl;
+    }
+    cout<<string(40, '-')<<endl;;
+}
+
 int main(int argc,char *argv[]){
     Parser parser;
     string address_grammar;
@@ -411,5 +439,7 @@ int main(int argc,char *argv[]){
     parser.printGrammar();
     parser.getFirstUnion();
     parser.printFirstUnion();
+    parser.createClosureList();
+    parser.printClosureList();
     return 0;
 }

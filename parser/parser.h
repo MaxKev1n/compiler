@@ -130,7 +130,7 @@ struct Grammar
 struct Closure{
     public:
         int index;
-        chType moveType = NULL;
+        chType moveType;
         vector<chType> moveTypeList;
         vector<bool> visitMatrix;
         //store map from moveType to closure's index
@@ -144,14 +144,14 @@ struct Closure{
 
                 LR1_Grammar() {}
                 LR1_Grammar(chType left, vector<chType> right, int index) : left(left), right(right), index(index) {}
-                bool operator==(const LR1_Grammar &right){
+                bool operator==(const LR1_Grammar &right) const{
                     return (this->index == right.index) && (this->right == right.right) && (this->rightTerminal == right.rightTerminal) && (this->left == right.left);
                 }
+                void printGrammar();
         };
 
-        vector<LR1_Grammar> grammarList;
-
     public:
+        vector<LR1_Grammar> grammarList;
         void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList, Closure originClosure, chType moveType);
         void initial(vector<Grammar> grammarList, vector<chType> nonTerminalList);
         vector<LR1_Grammar> getGrammarList() { return this->grammarList; }
@@ -180,6 +180,7 @@ struct Parser
         void printGrammar();
         void printNonTerminalList();
         void createClosureList();
+        void printClosureList();
 
 };
 

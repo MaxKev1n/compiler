@@ -237,3 +237,19 @@
 #### 18:22
 
 1. 更新`Closure::initial()`
+
+
+
+### 2022.4.24
+
+---
+
+#### 12:31
+
+1. 完成自动机的闭包运算
+
+
+
+**运行结果**：
+
+<img src="image/run_4.24.png" alt="run_3.27" style="zoom:80%;float:left" />
