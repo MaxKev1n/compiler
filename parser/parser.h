@@ -181,6 +181,7 @@ struct Parser
         void printNonTerminalList();
         void createClosureList();
         void printClosureList();
+        void dumpClosure(string address_output);
 
 };
 

@@ -420,6 +420,34 @@ void Parser::createClosureList(){
     }
 }
 
+void Parser::dumpClosure(string address_output){
+    cout<<"dumping Closure List!"<<endl<<string(40, '-')<<endl;
+
+    std::ofstream ofs;
+    ofs.open(address_output+"/Closure.txt");
+    std::stringstream ss;
+    for(vector<Closure>::iterator iter = this->closureList.begin(); iter != this->closureList.end();++iter){
+        ss<<"Closure index:"<<iter->index<<endl<<endl;
+        for(int i = 0;i < iter->grammarList.size();i++){
+            ss<<iter->grammarList[i].left.nonTerminal.getId()<<"->";
+            for(int j = 0;j < iter->grammarList[i].right.size();j++){
+                if(iter->grammarList[i].index == j)
+                    ss<<".";
+                if(iter->grammarList[i].right[j].isNonTerminal()){
+                    ss<<iter->grammarList[i].right[j].nonTerminal.getId()<<" ";
+                }
+                else{
+                    ss<<iter->grammarList[i].right[j].name<<" ";
+                }
+            }
+            ss<<","<<iter->grammarList[i].rightTerminal.name<<endl;;
+        }
+        ss<<"----------"<<endl;
+    }
+    ofs << ss.rdbuf();
+    ofs.close();
+}
+
 void Parser::printClosureList(){
     cout<<"This is the result of closure calculate"<<endl<<string(40, '-')<<endl;
     for(int i = 0;i < this->closureList.size();i++){
@@ -434,12 +462,14 @@ void Parser::printClosureList(){
 int main(int argc,char *argv[]){
     Parser parser;
     string address_grammar;
+    string address_output;
     address_grammar = argv[1];
+    address_output = argv[2];
     parser.readGrammar(address_grammar);
     parser.printGrammar();
     parser.getFirstUnion();
     parser.printFirstUnion();
     parser.createClosureList();
-    parser.printClosureList();
+    parser.dumpClosure(address_output);
     return 0;
 }

@@ -253,3 +253,15 @@
 **运行结果**：
 
 <img src="image/run_4.24.png" alt="run_3.27" style="zoom:80%;float:left" />
+
+---
+
+#### 20:09
+
+1. 增加dump closure功能
+
+
+
+**运行结果**：
+
+<img src="image/run_4.24_2.png" alt="run_3.27" style="zoom:80%;float:left" />

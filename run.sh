@@ -20,7 +20,7 @@ read -r -p "Run Task2? [Y/n] " task1
 case $task1 in 
 	[yY])
 		cd parser/
-		g++ -std=c++11 -o parser parser.cpp && ./parser ../simulation/grammar1.txt
+		g++ -std=c++11 -o parser parser.cpp && ./parser ../simulation/grammar1.txt ../res
 		echo "task2 completed!"
 		;;
 	[nN])
