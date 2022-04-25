@@ -470,10 +470,10 @@ void Parser::createClosureList(){
 }
 
 void Parser::dumpClosure(string address_output){
-    cout<<"dumping Closure List!"<<endl<<string(40, '-')<<endl;
+    cout<<string(40, '-')<<endl<<"dumping Closure List!"<<endl<<string(40, '-')<<endl;
 
     std::ofstream ofs;
-    ofs.open(address_output+"/Closure.txt");
+    ofs.open(address_output+"/Parser/Closure.txt");
     std::stringstream ss;
     for(vector<Closure>::iterator iter = this->closureList.begin(); iter != this->closureList.end();++iter){
         ss<<"Closure index: "<<iter->index<<endl;
@@ -511,28 +511,6 @@ void Parser::dumpClosure(string address_output){
             if(iter->grammarList[i].index == iter->grammarList[i].right.size())
                 ss<<".";
             ss<<","<<iter->grammarList[i].rightTerminal.name<<endl;
-        }
-        ss<<endl<<"Action Row:"<<endl;
-        for(int i = 0;i < chTypeList.size();i++){
-            ss<<chTypeList[i].name<<": ";
-            if(iter->ActionList[i].type == 1){
-                ss<<"S"<<iter->ActionList[i].number;
-            }
-            else if(iter->ActionList[i].type == 2){
-                ss<<"r"<<iter->ActionList[i].number;
-            }
-            else if(iter->ActionList[i].type == 3){
-                ss<<"acc";
-            }
-            ss<<endl;
-        }
-        ss<<endl<<"Goto Row:"<<endl;
-        for(int i = 1;i < this->nonTerminalList.size();i++){
-            ss<<this->nonTerminalList[i].nonTerminal.getId()<<": ";
-            if(iter->GotoList[i].number != -1){
-                ss<<iter->GotoList[i].number;
-            }
-            ss<<endl;
         }
         ss<<"----------"<<endl;
     }
@@ -617,6 +595,56 @@ void Parser::printClosureList(){
     cout<<string(40, '-')<<endl;;
 }
 
+void Parser::dumpData(string address_output){
+    cout<<"dumping Data!"<<endl<<string(40, '-')<<endl;
+
+    std::ofstream ofs;
+    ofs.open(address_output+"/Parser/Terminals.txt");
+    std::stringstream ss;
+    //dump terminals
+    for(int i = 0;i < chTypeList.size();i++){
+        ss<<chTypeList[i].name<<endl;
+    }
+    ofs << ss.rdbuf();
+    ofs.close();
+
+    //dump nonTerminals
+    ofs.open(address_output+"/Parser/nonTerminals.txt");
+    for(int i = 0;i < this->nonTerminalList.size();i++){
+        ss<<nonTerminalList[i].nonTerminal.getId()<<endl;
+    }
+    ofs << ss.rdbuf();
+    ofs.close();
+
+    //dump action&goto table
+    ofs.open(address_output+"/Parser/action&goto table.txt");
+    ss<<this->closureList.size()<<endl;
+    for(vector<Closure>::iterator iter = this->closureList.begin(); iter != this->closureList.end();++iter){
+        ss<<iter->index<<endl;
+        for(int i = 0;i < chTypeList.size();i++){
+            if(iter->ActionList[i].type == 1){
+                ss<<"S"<<iter->ActionList[i].number;
+            }
+            else if(iter->ActionList[i].type == 2){
+                ss<<"r"<<iter->ActionList[i].number;
+            }
+            else if(iter->ActionList[i].type == 3){
+                ss<<"acc";
+            }
+            ss<<endl;
+        }
+        ss<<endl;
+        for(int i = 1;i < this->nonTerminalList.size();i++){
+            if(iter->GotoList[i].number != -1){
+                ss<<iter->GotoList[i].number;
+            }
+            ss<<endl;
+        }
+    }
+    ofs << ss.rdbuf();
+    ofs.close();
+}
+
 int main(int argc,char *argv[]){
     Parser parser;
     string address_grammar;
@@ -624,11 +652,12 @@ int main(int argc,char *argv[]){
     address_grammar = argv[1];
     address_output = argv[2];
     parser.readGrammar(address_grammar);
-    parser.printGrammar();
+    //parser.printGrammar();
     parser.getFirstUnion();
-    parser.printFirstUnion();
+    //parser.printFirstUnion();
     parser.createClosureList();
     parser.constructTable();
     parser.dumpClosure(address_output);
+    parser.dumpData(address_output);
     return 0;
 }

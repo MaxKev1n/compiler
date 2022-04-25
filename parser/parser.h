@@ -223,7 +223,7 @@ struct Parser
         void printClosureList();
         void dumpClosure(string address_output);
         void constructTable();
-
+        void dumpData(string address_output);
 };
 
 

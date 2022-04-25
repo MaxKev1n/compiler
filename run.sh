@@ -21,6 +21,7 @@ case $task1 in
 	[yY])
 		cd parser/
 		g++ -std=c++11 -o parser parser.cpp && ./parser ../simulation/grammar1.txt ../res
+		python3 dumpTable.py
 		echo "task2 completed!"
 		;;
 	[nN])

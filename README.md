@@ -279,3 +279,13 @@
 **运行结果**：
 
 <img src="image/run_4.24_3.png" alt="run_3.27" style="zoom:80%;float:left" />
+
+
+
+### 2022.4.25
+
+---
+
+#### 10:13
+
+1. 增加python文件`dumpTable.py`，用于生成`action&goto table.xls`
