@@ -289,3 +289,12 @@
 #### 10:13
 
 1. 增加python文件`dumpTable.py`，用于生成`action&goto table.xls`
+
+---
+
+#### 15:54
+
+1. 更新自动化脚本，修复删除结果失败时无法运行的bug
+2. 修复未创建`res`文件夹时无法dump结果的bug
+3. 调整dump结果文件结构
+

@@ -472,8 +472,16 @@ void Parser::createClosureList(){
 void Parser::dumpClosure(string address_output){
     cout<<string(40, '-')<<endl<<"dumping Closure List!"<<endl<<string(40, '-')<<endl;
 
+    string dir = address_output;
+    if((access(dir.c_str(), 0) == -1)){
+        mkdir(dir.c_str(), S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+    }
+    if((access((dir + "/parser").c_str(), 0) == -1)){
+        mkdir((dir + "/parser").c_str(), S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+    }
+
     std::ofstream ofs;
-    ofs.open(address_output+"/Parser/Closure.txt");
+    ofs.open(address_output+"/parser/Closure.txt");
     std::stringstream ss;
     for(vector<Closure>::iterator iter = this->closureList.begin(); iter != this->closureList.end();++iter){
         ss<<"Closure index: "<<iter->index<<endl;
@@ -598,8 +606,16 @@ void Parser::printClosureList(){
 void Parser::dumpData(string address_output){
     cout<<"dumping Data!"<<endl<<string(40, '-')<<endl;
 
+    string dir = address_output;
+    if((access(dir.c_str(), 0) == -1)){
+        mkdir(dir.c_str(), S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+    }
+    if((access((dir + "/parser").c_str(), 0) == -1)){
+        mkdir((dir + "/parser").c_str(), S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+    }
+
     std::ofstream ofs;
-    ofs.open(address_output+"/Parser/Terminals.txt");
+    ofs.open(address_output+"/parser/Terminals.txt");
     std::stringstream ss;
     //dump terminals
     for(int i = 0;i < chTypeList.size();i++){
@@ -609,7 +625,7 @@ void Parser::dumpData(string address_output){
     ofs.close();
 
     //dump nonTerminals
-    ofs.open(address_output+"/Parser/nonTerminals.txt");
+    ofs.open(address_output+"/parser/nonTerminals.txt");
     for(int i = 0;i < this->nonTerminalList.size();i++){
         ss<<nonTerminalList[i].nonTerminal.getId()<<endl;
     }
@@ -617,7 +633,7 @@ void Parser::dumpData(string address_output){
     ofs.close();
 
     //dump action&goto table
-    ofs.open(address_output+"/Parser/action&goto table.txt");
+    ofs.open(address_output+"/parser/action&goto table.txt");
     ss<<this->closureList.size()<<endl;
     for(vector<Closure>::iterator iter = this->closureList.begin(); iter != this->closureList.end();++iter){
         ss<<iter->index<<endl;

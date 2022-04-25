@@ -172,8 +172,16 @@ void lexer::run(string address_grammar, string address_txt, string address_outpu
 
     cout<<"dumping token"<<endl;
 
+    string dir = address_output;
+    if((access(dir.c_str(), 0) == -1)){
+        mkdir(dir.c_str(), S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+    }
+    if((access((dir + "/lexical").c_str(), 0) == -1)){
+        mkdir((dir + "/lexical").c_str(), S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+    }
+
     std::ofstream ofs;
-    ofs.open(address_output+"/token.txt");
+    ofs.open(address_output+"/lexical/token.txt");
     std::stringstream ss;
     int i;
     for (i = 0;i < res.size() - 1;i++) {

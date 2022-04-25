@@ -258,8 +258,16 @@ void DFA::printDFA(){
 void DFA::dumpDFA(string address_output){
     cout<<"dumping DFA List!"<<endl;
 
+    string dir = address_output;
+    if((access(dir.c_str(), 0) == -1)){
+        mkdir(dir.c_str(), S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+    }
+    if((access((dir + "/lexical").c_str(), 0) == -1)){
+        mkdir((dir + "/lexical").c_str(), S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+    }
+
     std::ofstream ofs;
-    ofs.open(address_output+"/DFA.txt");
+    ofs.open(address_output+"/lexical/DFA.txt");
     std::stringstream ss;
     for(vector<DFA_state>::iterator iter = this->vec.begin(); iter != this->vec.end();++iter){
         ss<<"index: "<<iter->index<<endl;
