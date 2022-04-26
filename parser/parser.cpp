@@ -768,13 +768,62 @@ void Parser::processStr(){
     stack<int> stateStack;
     int stageIndex = 1;
 
-    while(){
+    while(1){
+        //need to find a suitable position to add new stage
+        if(stageIndex == 1){
+            symbolStack.push(Sign);
+            stateStack.push(0);
+        }
         Stage stage(stageIndex++);
-        symbolStack.push(Sign);
-        stateStack.push(0);
         stage.symbolStack = symbolStack;
         stage.stateStack = stateStack;
-
+        int stateIndex = stateStack.top();
+        chType inputCh = inputList[listIndex];
+        Closure::Action action = this->closureList[stateIndex].ActionList[inputCh.id];
+        bool Error = false;
+        bool Accept = false;
+        switch(action.type){
+            case 0:{
+                cout<<"ERROR!"<<endl;
+                Error = true;
+                break;
+            }
+            case 1:{
+                symbolStack.push(inputCh);
+                listIndex++;
+                stateStack.push(action.number);
+            }
+            case 2:{
+                int rightNumber = this->grammarList[action.number].getRightList().size();
+                while(rightNumber--){
+                    symbolStack.pop();
+                    stateStack.pop();
+                }
+                int topStateIndex = stateStack.top();
+                Closure::Goto go = this->closureList[topStateIndex].GotoList[this->grammarList[action.number].getLeft().nonTerminal.getId()];
+                symbolStack.push(this->grammarList[action.number].getLeft());
+                if(go.number == -1){
+                    cout<<"ERROR!"<<endl;
+                    Error = true;
+                }
+                else{
+                    stateStack.push(go.number);
+                }
+                break;
+            }
+            case 4:{
+                cout<<"Accept"<<endl;
+                Accept = true;
+                break;
+            }
+            default:{
+                cout<<"ERROR!"<<endl;
+                Error = true;
+            }
+        }
+        if(Error || Accept){
+            break;
+        }
     }
 }
 

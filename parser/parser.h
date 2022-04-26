@@ -30,7 +30,7 @@ struct chType{
         
         chType(int i, string n) : id(i), name(n){}
         chType(){};
-        chType(int i) : id(24), name("nonTerminal") { this->nonTerminal = NonTerminal(i); }
+        chType(int i) : id(46), name("nonTerminal") { this->nonTerminal = NonTerminal(i); }
 
         bool operator==(const chType &right){
             return this->id == right.id;
@@ -48,7 +48,7 @@ struct chType{
             return this->id < right.id;
         }
 
-        bool isNonTerminal() { return this->id == 24; }
+        bool isNonTerminal() { return this->id == 46; }
 };
 
 const chType letter(0, "letter");
@@ -75,30 +75,29 @@ const chType letter_E(20, "letter_E");
 const chType letter_i(21, "letter_i");
 const chType space(22, "space");
 const chType zero(23, "zero");
-const chType nonTerminal(24, "nonTerminal");
-const chType Sign(25, "Sign");
-const chType colon(26, "colon");
-const chType Equal(27, "equal");
-
-const chType Define(28, "define");
-const chType Swith(29, "switch");
-const chType Iwire(30, "iwire");
-const chType Owire(31, "owire");
-const chType Oreg(32, "oreg");
-const chType Wire(33, "wire");
-const chType Reg(34, "reg");
-const chType Mod(35, "mod");
-const chType Default(36, "default");
-const chType Case(37, "case");
-const chType If(38, "if");
-const chType Else(39, "else");
-const chType Abstract(40, "abstract");
-const chType Public(41, "public");
-const chType Private(42, "private");
-const chType Override(43, "override");
-const chType Const(44, "const");
-const chType identifier(45, "identifier");
-const chType constValue(46, "constValue");
+const chType Sign(24, "Sign");
+const chType colon(25, "colon");
+const chType Equal(26, "equal");
+const chType Define(27, "define");
+const chType Swith(28, "switch");
+const chType Iwire(29, "iwire");
+const chType Owire(30, "owire");
+const chType Oreg(31, "oreg");
+const chType Wire(32, "wire");
+const chType Reg(33, "reg");
+const chType Mod(34, "mod");
+const chType Default(35, "default");
+const chType Case(36, "case");
+const chType If(37, "if");
+const chType Else(38, "else");
+const chType Abstract(39, "abstract");
+const chType Public(40, "public");
+const chType Private(41, "private");
+const chType Override(42, "override");
+const chType Const(43, "const");
+const chType identifier(44, "identifier");
+const chType constValue(45, "constValue");
+const chType nonTerminal(46, "nonTerminal");
 
 const set<char> let {'a','b','c','d','e','f','g','h','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                          'A','B','C','D', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
