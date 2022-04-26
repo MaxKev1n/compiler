@@ -77,6 +77,28 @@ const chType space(22, "space");
 const chType zero(23, "zero");
 const chType nonTerminal(24, "nonTerminal");
 const chType Sign(25, "Sign");
+const chType colon(26, "colon");
+const chType Equal(27, "equal");
+
+const chType Define(28, "define");
+const chType Swith(29, "switch");
+const chType Iwire(30, "iwire");
+const chType Owire(31, "owire");
+const chType Oreg(32, "oreg");
+const chType Wire(33, "wire");
+const chType Reg(34, "reg");
+const chType Mod(35, "mod");
+const chType Default(36, "default");
+const chType Case(37, "case");
+const chType If(38, "if");
+const chType Else(39, "else");
+const chType Abstract(40, "abstract");
+const chType Public(41, "public");
+const chType Private(42, "private");
+const chType Override(43, "override");
+const chType Const(44, "const");
+const chType identifier(45, "identifier");
+const chType constValue(46, "constValue");
 
 const set<char> let {'a','b','c','d','e','f','g','h','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                          'A','B','C','D', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
@@ -84,14 +106,16 @@ const set<char> natNum {'1','2','3','4','5','6','7','8','9'};
 
 static vector<chType> chTypeList {letter, natNumber, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
-                           dollar, epsilon, dot, letter_E, letter_i, space, zero, Sign};
+                           dollar, epsilon, dot, letter_E, letter_i, space, zero, Sign, colon, Equal,
+                           Define, Swith, Iwire, Owire, Oreg, Wire, Reg, Mod, Default, Case, If, Else,
+                           Abstract, Public, Private, Override, Const, identifier, constValue};
 
-const set<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "default",
-                            "case", "if", "else", "elseif"};
+const vector<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "default",
+                            "case", "if", "else"};
 
-const set<string> qualifier {"abstract", "public", "private", "override", "const"};
+const vector<string> qualifier {"abstract", "public", "private", "override", "const"};
 
-const set<string> operators {"[", "]", "+", "-", "&", "|", "~", "^", ">>", "<<", ">>>", "(", ")", "*", "<", ">"};
+const vector<string> operators {"[", "]", "+", "-", "&", "|", "~", "^", ">>", "<<", ">>>", "(", ")", "*", "<", ">"};
 
 const set<chType> terminalList {};
 
@@ -100,6 +124,7 @@ struct Tuple{
         int line;
         string str;
         string type;
+        chType ch;
     public:
         Tuple();
         Tuple(int line, string str, string type) : line(line), str(str), type(type){};
@@ -107,10 +132,12 @@ struct Tuple{
         int getLine() { return this->line; }
         string getStr() { return this->str; }
         string getType() { return this->type; }
+        chType getCh() { return this->ch; }
 
         void setLine(int line) { this->line = line; }
         void setStr(string str) { this->str = str; }
         void setType(string type) { this->type = type; }
+        void setCh(chType ch) { this->ch = ch; }
 };
 
 struct Grammar
@@ -204,12 +231,27 @@ struct Closure{
         }
 };
 
+struct Stage{
+    public:
+        int index;
+        stack<chType> symbolStack;
+        stack<int> stateStack;
+        vector<chType> inputStr;
+        string Action;
+        int Goto;
+
+        Stage();
+        Stage(int index) : index(index);
+};
+
 struct Parser
 {
     private:
         vector<Grammar> grammarList;
         vector<chType> nonTerminalList;
         vector<Closure> closureList;
+        vector<Tuple> tupleList;
+        vector<Stage> stageList;
         
     public:
         int getNonTerminalIndex(int nonTerminal);
@@ -224,6 +266,8 @@ struct Parser
         void dumpClosure(string address_output);
         void constructTable();
         void dumpData(string address_output);
+        void readToken(string address_token);
+        void processStr();
 };
 
 

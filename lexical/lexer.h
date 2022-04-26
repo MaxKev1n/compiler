@@ -42,6 +42,10 @@ const chType letter_E(20, "letter_E");
 const chType letter_i(21, "letter_i");
 const chType space(22, "space");
 const chType zero(23, "zero");
+const chType nonTerminal(24, "nonTerminal");
+const chType Sign(25, "Sign");
+const chType colon(26, "colon");
+const chType Equal(27, "equal");
 
 struct lexer
 {
@@ -68,11 +72,11 @@ const set<char> natNum {'1','2','3','4','5','6','7','8','9'};
 
 static vector<chType> chTypeList {letter, natNumber, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
-                           dollar, epsilon, dot, letter_E, letter_i, space, zero};
+                           dollar, epsilon, dot, letter_E, letter_i, space, zero, Sign, colon, Equal};
 
 const set<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "default",
                             "case", "if", "else", "elseif"};
 
 const set<string> qualifier {"abstract", "public", "private", "override", "const"};
 
-const set<string> operators {"[", "]", "+", "-", "&", "|", "~", "^", ">>", "<<", ">>>", "(", ")", "*", "<", ">"};
+const set<string> operators {"[", "]", "+", "-", "&", "|", "~", "^", ">>", "<<", ">>>", "(", ")", "*", "<", ">", "="};

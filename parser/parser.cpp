@@ -661,6 +661,123 @@ void Parser::dumpData(string address_output){
     ofs.close();
 }
 
+void Parser::readToken(string address_token){
+    string str;
+    ifstream inf;
+    inf.open(address_token);
+    while(getline(inf, str)){
+        vector<string> stringList;
+        regex ws_re("\\s+");
+	    sregex_token_iterator pos(str.begin(), str.end(), ws_re, -1);
+	    decltype(pos) end;
+	    for (; pos != end; ++pos){
+            stringList.push_back(pos->str());
+        }
+
+        Tuple tuple(stoi(stringList[0]), stringList[2], stringList[1]);
+        if(tuple.getType() == "keyword" || tuple.getType() == "qualifier"){
+            for(vector<chType>::iterator iter = chTypeList.begin();iter != chTypeList.end();iter++){
+                if(tuple.getStr() == iter->name){
+                    tuple.setCh(*iter);
+                }
+            }
+        }
+        else if(tuple.getType() == "operators"){
+            switch(tuple.getStr()[0])
+            {
+                case '[':{
+                    tuple.setCh(midLeftPar);
+                    break;
+                }
+                case ']':{
+                    tuple.setCh(midRightPar);
+                    break;
+                }
+                case '+':{
+                    tuple.setCh(Plus);
+                    break;
+                }
+                case '-':{
+                    tuple.setCh(Minus);
+                    break;
+                }
+                case '&':{
+                    tuple.setCh(logAnd);
+                    break;
+                }
+                case '|':{
+                    tuple.setCh(logOr);
+                    break;
+                }
+                case '~':{
+                    tuple.setCh(logNot);
+                    break;
+                }
+                case '^':{
+                    tuple.setCh(logXor);
+                    break;
+                }
+                case '>':{
+                    tuple.setCh(rightArrow);
+                    break;
+                }
+                case '<':{
+                    tuple.setCh(leftArrow);
+                    break;
+                }
+                case '(':{
+                    tuple.setCh(smallLeftPar);
+                    break;
+                }
+                case ')':{
+                    tuple.setCh(smallRightPar);
+                    break;
+                }
+                case '*':{
+                    tuple.setCh(multi);
+                    break;
+                }
+                case '=':{
+                    tuple.setCh(leftArrow);
+                    break;
+                }
+                default:
+
+            }
+        }
+        else if(tuple.getType() == "identifier"){
+            tuple.setCh(identifier);
+        }
+        else{
+            tuple.setCh(constValue);
+        }
+
+        this->tupleList.push_back(tuple);
+        
+    }
+    inf.close();
+}
+
+void Parser::processStr(){
+    vector<chType> inputList;
+    int listIndex = 0;
+    for(vector<Tuple>::iterator iter = this->tupleList.begin();iter != this->tupleList.end();++iter){
+        inputList.push_back(iter->getCh());
+    }
+    stack<chType> symbolStack;
+    stack<int> stateStack;
+    int stageIndex = 1;
+
+    while(){
+        Stage stage(stageIndex++);
+        symbolStack.push(Sign);
+        stateStack.push(0);
+        stage.symbolStack = symbolStack;
+        stage.stateStack = stateStack;
+
+    }
+}
+
 int main(int argc,char *argv[]){
     Parser parser;
     string address_grammar;

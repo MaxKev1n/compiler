@@ -104,6 +104,14 @@ chType lexer::chtypeDetect(char ch){
             return zero;
             break;
         }
+        case ':':{
+            return colon;
+            break;
+        }
+        case '=':{
+            return Equal;
+            break;
+        }
         default:
             return epsilon;
             break;
