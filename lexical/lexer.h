@@ -74,7 +74,7 @@ static vector<chType> chTypeList {letter, natNumber, underline, midLeftPar, midR
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
                            dollar, epsilon, dot, letter_E, letter_i, space, zero, Sign, colon, Equal};
 
-const set<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "default",
+const set<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "endmod", "default",
                             "case", "if", "else", "elseif"};
 
 const set<string> qualifier {"abstract", "public", "private", "override", "const"};

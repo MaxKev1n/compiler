@@ -5,10 +5,9 @@ case $task1 in
 	[yY])
 		cd $COMPILERPATH
 		cd res/lexical
-		rm *.txt
+		rm *
 		echo "clean previous result"
 		cd $COMPILERPATH/lexical
-		echo $(pwd)
    		g++ -std=c++11 -o run run.cpp convert.cpp lexer.cpp && ./run ../simulation/grammar.txt ../simulation/test.txt ../res
 		echo "task1 completed!"
 		;;
@@ -23,12 +22,12 @@ case $task1 in
 	[yY])
 		cd $COMPILERPATH
 		cd res/parser
-		rm *.txt
+		rm -r *
 		echo "clean previous result"
 		cd $COMPILERPATH/parser
-		echo $(pwd)
-		g++ -std=c++11 -o parser parser.cpp && ./parser ../simulation/grammar1.txt ../res
+		g++ -std=c++11 -o parser parser.cpp && ./parser ../simulation/grammar1.txt ../res ../res/lexical/token.txt
 		python3 dumpTable.py
+		python3 dumpAnalysis.py
 		echo "task2 completed!"
 		;;
 	[nN])

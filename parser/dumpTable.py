@@ -1,18 +1,18 @@
 import xlwt
 import xlrd
 
-terminals_txt =open('../res/parser/Terminals.txt')
+terminals_txt =open('../res/parser/essential/Terminals.txt')
 terminals=[]
 for line in terminals_txt:
     terminals.append(line.strip())
 
-nonTerminals_txt =open('../res/parser/nonTerminals.txt')
+nonTerminals_txt =open('../res/parser/essential/nonTerminals.txt')
 nonTerminals=[]
 for line in nonTerminals_txt:
     nonTerminals.append(line.strip())
 del nonTerminals[0]
 
-closure_txt =open('../res/parser/action&goto table.txt')
+closure_txt =open('../res/parser/statistics/action&goto table.txt')
 closures=[]
 for line in closure_txt:
     closures.append(line.strip())
@@ -41,4 +41,4 @@ for row in range(closure_num):
         ws.write(row + 1, column, closures[row * length + column])
 
 
-wb.save('../res/parser/action&goto table.xls')
+wb.save('../res/parser/statistics/action&goto table.xls')

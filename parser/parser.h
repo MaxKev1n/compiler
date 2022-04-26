@@ -14,6 +14,8 @@ struct NonTerminal
         NonTerminal(int id) : id(id) {};
 
         bool operator==(const NonTerminal &right) { return this->id == right.id; }
+        bool operator!=(const NonTerminal &right) { return this->id != right.id; }
+        bool operator!=(const NonTerminal &right) const{ return this->id != right.id; }
         void addFirstUnion(int terminal) { this->firstUnion.insert(terminal); }
         void addFirstUnion(set<int> firstUnion, bool hasEp);
         set<int> getFirstUnion() { return this->firstUnion; }
@@ -30,7 +32,7 @@ struct chType{
         
         chType(int i, string n) : id(i), name(n){}
         chType(){};
-        chType(int i) : id(46), name("nonTerminal") { this->nonTerminal = NonTerminal(i); }
+        chType(int i) : id(47), name("nonTerminal") { this->nonTerminal = NonTerminal(i); }
 
         bool operator==(const chType &right){
             return this->id == right.id;
@@ -44,11 +46,15 @@ struct chType{
             return this->id != right.id;
         }
 
+        bool operator!=(const chType &right) const{
+            return this->id != right.id;
+        }
+
         bool operator<(const chType &right) const{
             return this->id < right.id;
         }
 
-        bool isNonTerminal() { return this->id == 46; }
+        bool isNonTerminal() { return this->id == 47; }
 };
 
 const chType letter(0, "letter");
@@ -79,7 +85,7 @@ const chType Sign(24, "Sign");
 const chType colon(25, "colon");
 const chType Equal(26, "equal");
 const chType Define(27, "define");
-const chType Swith(28, "switch");
+const chType Swich(28, "switch");
 const chType Iwire(29, "iwire");
 const chType Owire(30, "owire");
 const chType Oreg(31, "oreg");
@@ -97,7 +103,8 @@ const chType Override(42, "override");
 const chType Const(43, "const");
 const chType identifier(44, "identifier");
 const chType constValue(45, "constValue");
-const chType nonTerminal(46, "nonTerminal");
+const chType endmod(46, "endmod");
+const chType nonTerminal(47, "nonTerminal");
 
 const set<char> let {'a','b','c','d','e','f','g','h','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                          'A','B','C','D', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
@@ -106,10 +113,10 @@ const set<char> natNum {'1','2','3','4','5','6','7','8','9'};
 static vector<chType> chTypeList {letter, natNumber, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
                            dollar, epsilon, dot, letter_E, letter_i, space, zero, Sign, colon, Equal,
-                           Define, Swith, Iwire, Owire, Oreg, Wire, Reg, Mod, Default, Case, If, Else,
-                           Abstract, Public, Private, Override, Const, identifier, constValue};
+                           Define, Swich, Iwire, Owire, Oreg, Wire, Reg, Mod, Default, Case, If, Else,
+                           Abstract, Public, Private, Override, Const, identifier, constValue, endmod};
 
-const vector<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "default",
+const vector<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wire", "reg", "mod", "endmod", "default",
                             "case", "if", "else"};
 
 const vector<string> qualifier {"abstract", "public", "private", "override", "const"};
@@ -207,7 +214,24 @@ struct Closure{
                 LR1_Grammar() {}
                 LR1_Grammar(chType left, vector<chType> right, int index, int grammarIndex) : left(left), right(right), index(index), grammarIndex(grammarIndex) {}
                 bool operator==(const LR1_Grammar &right) const{
-                    return (this->index == right.index) && (this->right == right.right) && (this->rightTerminal == right.rightTerminal) && (this->left == right.left);
+                    if(this->index != right.index)
+                        return false;
+                    if(this->right.size() != right.right.size())
+                        return false;
+                    for(int i = 0;i < this->right.size();i++){
+                        if(this->right[i] == right.right[i]){
+                            if(this->right[i].id == 47 && (this->right[i].nonTerminal != right.right[i].nonTerminal))
+                                return false;
+                        }
+                        else{
+                            return false;
+                        }
+                    }
+                    if(this->rightTerminal != right.rightTerminal)
+                        return false;
+                    if(this->left.nonTerminal != right.left.nonTerminal)
+                        return false;
+                    return true;
                 }
                 void printGrammar();
         };
@@ -223,6 +247,7 @@ struct Closure{
         int nextVisit();
         vector<chType> getRightTerminal(vector<chType> nonTerminalList, vector<chType> str);
         int getGrammarIndex(int index) { return this->grammarList[index].grammarIndex; }
+        void printClosure();
 
         Closure() {}
         bool operator==(const Closure &right) const{
@@ -240,7 +265,7 @@ struct Stage{
         int Goto;
 
         Stage();
-        Stage(int index) : index(index);
+        Stage(int index) : index(index) {};
 };
 
 struct Parser
@@ -262,7 +287,6 @@ struct Parser
         void printNonTerminalList();
         void createClosureList();
         void printClosureList();
-        void dumpClosure(string address_output);
         void constructTable();
         void dumpData(string address_output);
         void readToken(string address_token);

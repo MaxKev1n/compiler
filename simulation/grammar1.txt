@@ -1,6 +1,35 @@
 1 2
-2 letter 3 midLeftPar
-2 natNumber 3 underline
-2 letter midRightPar underline
-2 natNumber midRightPar midLeftPar
-3 midRightPar
+2 mod identifier smallLeftPar 3 smallRightPar 4
+4 endmod
+3 iwire midLeftPar constValue midRightPar identifier 3
+3 owire midLeftPar constValue midRightPar identifier 3
+3 oreg midLeftPar constValue midRightPar identifier 3
+3 owire midLeftPar constValue midRightPar identifier
+3 oreg midLeftPar constValue midRightPar identifier
+4 5 midLeftPar constValue midRightPar identifier equal 6 4
+4 5 midLeftPar constValue midRightPar identifier equal identifier 4
+4 5 midLeftPar constValue midRightPar identifier equal constValue 4
+5 abstract
+5 public
+5 private
+5 override
+5 const
+4 7 midLeftPar constValue midRightPar identifier equal 6 4
+4 7 midLeftPar constValue midRightPar identifier equal identifier 4
+4 7 midLeftPar constValue midRightPar identifier equal constValue 4
+7 wire
+7 reg
+6 8 Plus 9
+6 8 Minus 9
+6 8 logAnd 9
+6 8 logOr 9
+6 8 logNot 9
+6 8 logXor 9
+6 8 rightArrow 9
+6 8 leftArrow 9
+6 8 multi 9
+6 8 equal 9
+8 identifier
+8 constValue
+9 identifier
+9 constValue
