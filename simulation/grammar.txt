@@ -77,6 +77,8 @@
 0 equal 19
 0 smallLeftPar 19
 0 smallRightPar 19
+0 bigLeftPar 19
+0 bigRightPar 19
 19 space
 19 semicolon
 0 rightArrow 20

@@ -719,7 +719,7 @@ void Parser::dumpData(string address_output){
     ofs.close();
 
     //dump state stack
-    ofs.open(address_output+"/parser/statistics/stateStack.txt");
+    ofs.open(address_output+"/parser/essential/stateStack.txt");
     for(vector<Stage>::iterator iter = this->stageList.begin(); iter != this->stageList.end();++iter){
         Stage temp = *iter;
         stack<int> stateStack;
@@ -737,7 +737,7 @@ void Parser::dumpData(string address_output){
     ofs.close();
 
     //dump symbol stack
-    ofs.open(address_output+"/parser/statistics/symbolStack.txt");
+    ofs.open(address_output+"/parser/essential/symbolStack.txt");
     for(vector<Stage>::iterator iter = this->stageList.begin(); iter != this->stageList.end();++iter){
         Stage temp = *iter;
         stack<chType> symbolStack;
@@ -755,7 +755,7 @@ void Parser::dumpData(string address_output){
     ofs.close();
 
     //dump input string
-    ofs.open(address_output+"/parser/statistics/inputStr.txt");
+    ofs.open(address_output+"/parser/essential/inputStr.txt");
     for(vector<Stage>::iterator iter = this->stageList.begin(); iter != this->stageList.end();++iter){
         Stage temp = *iter;
         for(int i = 0;i < temp.inputStr.size();i++){
@@ -767,7 +767,7 @@ void Parser::dumpData(string address_output){
     ofs.close();
 
     //dump action & goto
-    ofs.open(address_output+"/parser/statistics/actionGoto.txt");
+    ofs.open(address_output+"/parser/essential/actionGoto.txt");
     for(vector<Stage>::iterator iter = this->stageList.begin(); iter != this->stageList.end();++iter){
         Stage temp = *iter;
         ss<<temp.Action<<" "<<temp.Goto<<endl;
@@ -856,6 +856,14 @@ void Parser::readToken(string address_token){
                     tuple.setCh(Equal);
                     break;
                 }
+                case '{':{
+                    tuple.setCh(bigLeftPar);
+                    break;
+                }
+                case '}':{
+                    tuple.setCh(bigRightPar);
+                    break;
+                }
                 default:{
 
                 }
@@ -877,10 +885,13 @@ void Parser::readToken(string address_token){
 
 void Parser::processStr(){
     vector<chType> inputList;
+    vector<int> lineList;
     int listIndex = 0;
     for(vector<Tuple>::iterator iter = this->tupleList.begin();iter != this->tupleList.end();++iter){
         inputList.push_back(iter->getCh());
+        lineList.push_back(iter->getLine());
     }
+
     inputList.push_back(Sign);
     stack<chType> symbolStack;
     stack<int> stateStack;
@@ -894,6 +905,7 @@ void Parser::processStr(){
         Stage stage(stageIndex++);
         stage.symbolStack = symbolStack;
         stage.stateStack = stateStack;
+        stage.line = lineList[listIndex];
         for(int i = listIndex;i < inputList.size();i++){
             stage.inputStr.push_back(inputList[i]);
         }
@@ -904,8 +916,19 @@ void Parser::processStr(){
         bool Accept = false;
         switch(action.type){
             case 0:{
-                cout<<string(40, '-')<<endl<<"ERROR 0!"<<endl;
+                cout<<string(40, '-')<<endl<<"REJECT!"<<endl<<endl;
                 Error = true;
+                vector<chType> lackTerminals;
+                for(int i = 0;i < this->closureList[stateIndex].ActionList.size();i++){
+                    if(this->closureList[stateIndex].ActionList[i].type == 1 | this->closureList[stateIndex].ActionList[i].type == 2){
+                        lackTerminals.push_back(chTypeList[i]);
+                    }
+                }
+                cout<<"In line:"<<stage.line<<" Need ";
+                for(int i = 0;i < lackTerminals.size();i++){
+                    cout<<lackTerminals[i].name<<" ";
+                }
+                cout<<"after "<<symbolStack.top().name<<endl;
                 break;
             }
             case 1:{
@@ -932,7 +955,7 @@ void Parser::processStr(){
                 Closure::Goto go = this->closureList[topStateIndex].GotoList[goIndex];
                 symbolStack.push(this->grammarList[action.number].getLeft());
                 if(go.number == -1){
-                    cout<<string(40, '-')<<endl<<"ERRO!"<<endl;
+                    cout<<string(40, '-')<<endl<<"REJECT!"<<endl;
                     Error = true;
                 }
                 else{
@@ -949,7 +972,7 @@ void Parser::processStr(){
                 break;
             }
             default:{
-                cout<<string(40, '-')<<endl<<"ERROR!"<<endl;
+                cout<<string(40, '-')<<endl<<"REJECT!"<<endl;
                 Error = true;
             }
         }

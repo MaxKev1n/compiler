@@ -32,7 +32,7 @@ struct chType{
         
         chType(int i, string n) : id(i), name(n){}
         chType(){};
-        chType(int i) : id(47), name("nonTerminal") { this->nonTerminal = NonTerminal(i); }
+        chType(int i) : id(49), name("nonTerminal") { this->nonTerminal = NonTerminal(i); }
 
         bool operator==(const chType &right){
             return this->id == right.id;
@@ -54,7 +54,7 @@ struct chType{
             return this->id < right.id;
         }
 
-        bool isNonTerminal() { return this->id == 47; }
+        bool isNonTerminal() { return this->id == 49; }
 };
 
 const chType letter(0, "letter");
@@ -84,27 +84,30 @@ const chType zero(23, "zero");
 const chType Sign(24, "Sign");
 const chType colon(25, "colon");
 const chType Equal(26, "equal");
-const chType Define(27, "define");
-const chType Swich(28, "switch");
-const chType Iwire(29, "iwire");
-const chType Owire(30, "owire");
-const chType Oreg(31, "oreg");
-const chType Wire(32, "wire");
-const chType Reg(33, "reg");
-const chType Mod(34, "mod");
-const chType Default(35, "default");
-const chType Case(36, "case");
-const chType If(37, "if");
-const chType Else(38, "else");
-const chType Abstract(39, "abstract");
-const chType Public(40, "public");
-const chType Private(41, "private");
-const chType Override(42, "override");
-const chType Const(43, "const");
-const chType identifier(44, "identifier");
-const chType constValue(45, "constValue");
-const chType endmod(46, "endmod");
-const chType nonTerminal(47, "nonTerminal");
+const chType bigLeftPar(27, "bigLeftPar");
+const chType bigRightPar(28, "bigRightPar");
+
+const chType Define(29, "define");
+const chType Swich(30, "switch");
+const chType Iwire(31, "iwire");
+const chType Owire(32, "owire");
+const chType Oreg(33, "oreg");
+const chType Wire(34, "wire");
+const chType Reg(35, "reg");
+const chType Mod(36, "mod");
+const chType Default(37, "default");
+const chType Case(38, "case");
+const chType If(39, "if");
+const chType Else(40, "else");
+const chType Abstract(41, "abstract");
+const chType Public(42, "public");
+const chType Private(43, "private");
+const chType Override(44, "override");
+const chType Const(45, "const");
+const chType identifier(46, "identifier");
+const chType constValue(47, "constValue");
+const chType endmod(48, "endmod");
+const chType nonTerminal(49, "nonTerminal");
 
 const set<char> let {'a','b','c','d','e','f','g','h','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                          'A','B','C','D', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
@@ -112,7 +115,7 @@ const set<char> natNum {'1','2','3','4','5','6','7','8','9'};
 
 static vector<chType> chTypeList {letter, natNumber, underline, midLeftPar, midRightPar, Plus, Minus, logAnd, logOr,
                            logNot, logXor, rightArrow, leftArrow, semicolon, multi, smallLeftPar,smallRightPar,
-                           dollar, epsilon, dot, letter_E, letter_i, space, zero, Sign, colon, Equal,
+                           dollar, epsilon, dot, letter_E, letter_i, space, zero, Sign, colon, Equal, bigLeftPar, bigRightPar,
                            Define, Swich, Iwire, Owire, Oreg, Wire, Reg, Mod, Default, Case, If, Else,
                            Abstract, Public, Private, Override, Const, identifier, constValue, endmod};
 
@@ -121,7 +124,7 @@ const vector<string> keyword {"define", "switch", "iwire", "owire", "oreg", "wir
 
 const vector<string> qualifier {"abstract", "public", "private", "override", "const"};
 
-const vector<string> operators {"[", "]", "+", "-", "&", "|", "~", "^", ">>", "<<", ">>>", "(", ")", "*", "<", ">"};
+const vector<string> operators {"[", "]", "+", "-", "&", "|", "~", "^", ">>", "<<", ">>>", "(", ")", "*", "<", ">", "{", "}"};
 
 const set<chType> terminalList {};
 
@@ -220,7 +223,7 @@ struct Closure{
                         return false;
                     for(int i = 0;i < this->right.size();i++){
                         if(this->right[i] == right.right[i]){
-                            if(this->right[i].id == 47 && (this->right[i].nonTerminal != right.right[i].nonTerminal))
+                            if(this->right[i].id == 49 && (this->right[i].nonTerminal != right.right[i].nonTerminal))
                                 return false;
                         }
                         else{
@@ -258,6 +261,7 @@ struct Closure{
 struct Stage{
     public:
         int index;
+        int line;
         stack<chType> symbolStack;
         stack<int> stateStack;
         vector<chType> inputStr;

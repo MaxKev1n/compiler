@@ -6,16 +6,16 @@ case $task1 in
 		cd $COMPILERPATH
 		cd res/lexical
 		rm *
-		echo "clean previous result"
+		echo -e "clean previous result\n "
 		cd $COMPILERPATH/lexical
    		g++ -std=c++11 -o run run.cpp convert.cpp lexer.cpp && ./run ../simulation/grammar.txt ../simulation/test.txt ../res
-		echo "task1 completed!"
+		echo -e "task1 completed!\n "
 		;;
 	[nN])
-		echo "skip Task1"
+		echo -e "skip Task1\n "
 		;;
 	*)
-		echo "skip Task1"
+		echo -e "skip Task1\n "
 esac
 read -r -p "Run Task2? [Y/n] " task1
 case $task1 in 
@@ -23,7 +23,7 @@ case $task1 in
 		cd $COMPILERPATH
 		cd res/parser
 		rm -r *
-		echo "clean previous result"
+		echo -e "clean previous result\n "
 		cd $COMPILERPATH/parser
 		g++ -std=c++11 -o parser parser.cpp && ./parser ../simulation/grammar1.txt ../res ../res/lexical/token.txt
 		python3 dumpTable.py

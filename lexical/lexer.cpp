@@ -112,6 +112,14 @@ chType lexer::chtypeDetect(char ch){
             return Equal;
             break;
         }
+        case '{':{
+            return bigLeftPar;
+            break;
+        }
+        case '}':{
+            return bigRightPar;
+            break;
+        }
         default:
             return epsilon;
             break;
@@ -178,7 +186,7 @@ void lexer::run(string address_grammar, string address_txt, string address_outpu
     }
     inf.close();
 
-    cout<<"dumping token"<<endl;
+    cout<<"dumping token!"<<endl<<string(40, '-')<<endl;
 
     string dir = address_output;
     if((access(dir.c_str(), 0) == -1)){

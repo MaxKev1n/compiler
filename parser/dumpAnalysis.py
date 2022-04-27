@@ -1,27 +1,27 @@
 import xlwt
 
-actionGoto_txt =open('../res/parser/statistics/actionGoto.txt')
+actionGoto_txt =open('../res/parser/essential/actionGoto.txt')
 actionGoto=[]
 temp0 = actionGoto_txt.readlines()
 for line in temp0:
     str = line.rstrip().split()
     actionGoto.append(str)
 
-stateStack_txt =open('../res/parser/statistics/stateStack.txt')
+stateStack_txt =open('../res/parser/essential/stateStack.txt')
 stateStack=[]
 temp1 = stateStack_txt.readlines()
 for line in temp1:
     str = line.rstrip().split()
     stateStack.append(str)
 
-symbolStack_txt =open('../res/parser/statistics/symbolStack.txt')
+symbolStack_txt =open('../res/parser/essential/symbolStack.txt')
 symbolStack=[]
 temp2 = symbolStack_txt.readlines()
 for line in temp2:
     str = line.rstrip().split()
     symbolStack.append(str)
 
-inputStr_txt =open('../res/parser/statistics/inputStr.txt')
+inputStr_txt =open('../res/parser/essential/inputStr.txt')
 inputStr=[]
 temp3 = inputStr_txt.readlines()
 for line in temp3:
@@ -84,7 +84,7 @@ for i in range(len(stateStack)):
             ws.write(i + 1, maxStateLen + maxSymbolLen + 2 + 3 + j, ' ')
     ws.write(i + 1, maxStateLen + maxSymbolLen + maxStrLen + 2 + 2 + 1, ' ')
     ws.write(i + 1, maxStateLen + maxSymbolLen + maxStrLen + 2 + 2 + 2, ' ')
-    ws.write(i + 1, maxStateLen + maxSymbolLen + maxStrLen + 2 + 2 + 3, actionGoto[i][0])
-    ws.write(i + 1, maxStateLen + maxSymbolLen + maxStrLen + 2 + 2 + 4, actionGoto[i][1])
+    for j in range(len(actionGoto[i])):
+        ws.write(i + 1, maxStateLen + maxSymbolLen + maxStrLen + 2 + 2 + 3 + j, actionGoto[i][j])
 
 wb.save('../res/parser/statistics/analysis.xls')

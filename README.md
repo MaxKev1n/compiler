@@ -216,7 +216,7 @@
 
 **运行结果：**
 
-<img src="image/run_4.12.png" alt="run_3.27" style="zoom:80%;float:left" />
+<img src="image/run_4.12.png" alt="run_4.12" style="zoom:80%;float:left" />
 
 
 
@@ -254,7 +254,7 @@
 
 **运行结果**：
 
-<img src="image/run_4.24.png" alt="run_3.27" style="zoom:80%;float:left" />
+<img src="image/run_4.24.png" alt="run_4.24" style="zoom:80%;float:left" />
 
 ---
 
@@ -266,7 +266,7 @@
 
 **运行结果**：
 
-<img src="image/run_4.24_2.png" alt="run_3.27" style="zoom:80%;float:left" />
+<img src="image/run_4.24_2.png" alt="run_4.24_2" style="zoom:80%;float:left" />
 
 ---
 
@@ -280,7 +280,7 @@
 
 **运行结果**：
 
-<img src="image/run_4.24_3.png" alt="run_3.27" style="zoom:80%;float:left" />
+<img src="image/run_4.24_3.png" alt="run_4.24_3" style="zoom:80%;float:left" />
 
 
 
@@ -312,3 +312,24 @@
 2. 完成语法分析基本功能
 3. 增加更多的dump结果
 4. 调整文件结构
+
+---
+
+#### 15:28
+
+1. 增加更多的语法以支持预定的功能
+   1. `if`语句
+   2. `switch`语句
+   3. 更多的赋值语句
+
+2. 增加更多的符号
+
+3. 支持简单的语法错误说明提示
+
+
+
+**运行结果**：
+
+<img src="image/result_reject.png" alt="result_reject" style="zoom:80%;float:left" />
+
+<img src="image/result_accept.png" alt="result_accept" style="zoom:80%;float:left" />

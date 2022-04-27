@@ -256,7 +256,7 @@ void DFA::printDFA(){
 }
 
 void DFA::dumpDFA(string address_output){
-    cout<<"dumping DFA List!"<<endl;
+    cout<<string(40, '-')<<endl<<"dumping DFA List!"<<endl<<string(40, '-')<<endl;
 
     string dir = address_output;
     if((access(dir.c_str(), 0) == -1)){
