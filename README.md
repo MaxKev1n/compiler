@@ -333,3 +333,13 @@
 <img src="image/result_reject.png" alt="result_reject" style="zoom:80%;float:left" />
 
 <img src="image/result_accept.png" alt="result_accept" style="zoom:80%;float:left" />
+
+
+
+### 2022.5.5
+
+---
+
+#### 10:33
+
+1. 词法分析器增加错误提示

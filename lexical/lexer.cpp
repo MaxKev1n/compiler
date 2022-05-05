@@ -160,6 +160,7 @@ void lexer::run(string address_grammar, string address_txt, string address_outpu
     ifstream inf;
     inf.open(address_txt);
     int line = 1;
+    int errorCount = 0;
     while(getline(inf, text)){
         text += '\n';
         string t = "";
@@ -173,11 +174,16 @@ void lexer::run(string address_grammar, string address_txt, string address_outpu
 
                 curIndex = 0;
                 t = "";
-            }else if(curIndex == -1 && text[i] == ' '){
+            }else if(curIndex == -1 && (text[i] == ' ' || text[i] == '\n')){
+                if(int(t[0]) != 0){
+                    cout<<"ERROR in line "<<line<<", "<<t<<endl;
+                    errorCount++;
+                }
                 curIndex = 0;
                 t = "";
             }else if(curIndex == -1){
                 curIndex = -1;
+                t += text[i];
             }else{
                 t += text[i];
             }
@@ -186,7 +192,13 @@ void lexer::run(string address_grammar, string address_txt, string address_outpu
     }
     inf.close();
 
-    cout<<"dumping token!"<<endl<<string(40, '-')<<endl;
+    if(errorCount != 0){
+        cout<<"Exist "<<errorCount<<" wrong!"<<endl;
+    }
+    else{
+        cout<<"Lexical Analyze Successfully!"<<endl;
+    }
+    cout<<string(40, '-')<<endl<<"dumping token!"<<endl<<string(40, '-')<<endl;
 
     string dir = address_output;
     if((access(dir.c_str(), 0) == -1)){
